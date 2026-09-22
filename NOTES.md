@@ -5,7 +5,7 @@ Les numéros de ligne ci-dessous correspondent à l’état **après** Prettier.
 
 ## Stack (rappel)
 
-- React + TanStack Router/Start + Zustand
+- React + TanStack Router/Start + Zustand + Vite
 - Persistance locale : `localStorage` clé `oche-steel-tip` (`assets/store-QFDO1GxK.js`)
 - Partage salon : server functions TanStack → `POST /_serverFn/<hash>` (backend grok.me, pas embarqué ici)
 
@@ -42,7 +42,7 @@ Fichier principal : **`assets/formats-M2QI3UJX.js`** (données `name` / `short` 
 
 Exemples EN à franciser (garder le jargon club si voulu) :
 
-| Ligne ~ | String actuelle | Idée FR |
+| Lignes ~ | String actuelle | Idée FR |
 |---|---|---|
 | 5+ | `501 double out`, `301 double out`, … | `501 double out` (souvent laissé EN) ou `501 sortie double` |
 | 33 | `501 master out` | `501 master out` / `501 sortie master` |

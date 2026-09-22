@@ -107,7 +107,7 @@ function y(e) {
     (e) => (`child` in e ? e.children(e.child) : e.children),
     `Slottable`,
   );
-  return (t.displayName = `${e}.Slottable`), t;
+  return (t.displayName = `${e}.Slottable`), (t.__radixId = v), t;
 }
 h(y, `createSlottable`);
 var b = h((e, t) => {
