@@ -269,20 +269,17 @@ function b() {
 }
 function x({ fx: e, nameOf: n, onPlay: r, canPlay: i }) {
   let a = !!(i && e.playerA && e.playerB && !e.winnerId && !e.bye),
+    s = !!(e.winnerId && !e.bye),
     o = e.winnerId && e.scoreA != null && e.scoreB != null;
   return (0, y.jsxs)(`button`, {
     type: `button`,
     onClick: a ? r : void 0,
     disabled: !a,
     className: t(
-      `w-full rounded-[var(--radius-md)] border-2 px-3 py-2 text-left`,
-      a &&
-        `border-inset bg-board-green/25 shadow-[var(--shadow-stamp-cream)] hover:bg-board-green/40`,
-      e.winnerId &&
-        `border-transparent bg-board-cream/12 shadow-[var(--shadow-border)]`,
-      !a &&
-        !e.winnerId &&
-        `border-transparent bg-raised shadow-[var(--shadow-border)] opacity-80`,
+      `oche-fx`,
+      a && `oche-fx--play`,
+      s && `oche-fx--done`,
+      !a && !s && `oche-fx--wait`,
     ),
     children: [
       (0, y.jsxs)(`div`, {
@@ -321,8 +318,13 @@ function x({ fx: e, nameOf: n, onPlay: r, canPlay: i }) {
       }),
       a &&
         (0, y.jsx)(`p`, {
-          className: `mt-1 text-xs text-board-cream`,
-          children: `Saisir le score`,
+          className: `oche-fx__badge oche-fx__badge--play`,
+          children: `À jouer · saisir le score`,
+        }),
+      s &&
+        (0, y.jsx)(`p`, {
+          className: `oche-fx__badge oche-fx__badge--done`,
+          children: `Terminé`,
         }),
     ],
   });

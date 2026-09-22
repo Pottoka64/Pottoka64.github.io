@@ -13,8 +13,15 @@ function _(e, t) {
   return e ? (t[e] ?? `Joueur`) : `À venir`;
 }
 function v({ fx: e, names: t }) {
+  let n = !!(e.winnerId && !e.bye),
+    i = !!(e.playerA && e.playerB && !e.winnerId && !e.bye);
   return (0, g.jsxs)(`div`, {
-    className: `rounded-[var(--radius-md)] border-2 border-transparent bg-raised px-3 py-2 shadow-[var(--shadow-border)]`,
+    className: r(
+      `oche-fx`,
+      i && `oche-fx--play`,
+      n && `oche-fx--done`,
+      !i && !n && `oche-fx--wait`,
+    ),
     children: [
       (0, g.jsxs)(`p`, {
         className: `truncate text-sm`,
@@ -27,6 +34,16 @@ function v({ fx: e, names: t }) {
         ),
         children: _(e.playerB, t),
       }),
+      i &&
+        (0, g.jsx)(`p`, {
+          className: `oche-fx__badge oche-fx__badge--play`,
+          children: `À jouer`,
+        }),
+      n &&
+        (0, g.jsx)(`p`, {
+          className: `oche-fx__badge oche-fx__badge--done`,
+          children: `Terminé`,
+        }),
     ],
   });
 }

@@ -458,7 +458,7 @@ var e = [
     {
       id: `double`,
       name: `Double élimination`,
-      summary: `Tableau gagnants + tableau perdants. Il faut perdre deux fois pour sortir.`,
+      summary: `Tableau gagnants + tableau perdants. Il faut perdre deux fois pour sortir. Byes (exemptions) limités au pad puissance de 2 côté gagnants (pas de cartes exempt affichées).`,
     },
     {
       id: `roundrobin`,

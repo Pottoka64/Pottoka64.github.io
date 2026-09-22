@@ -172,3 +172,24 @@ Pass UI-facing applied on bundled assets (string literals only):
 | join / salle error copy | `Ce salon n’existe pas ou a été fermé. Vérifie le code et réessaie.` (input not cleared) | `join-form-plRLSa1H.js`, `salle._code-C9D-378V.js` |
 
 **Left intentional EN:** format card names (`501 double out`, Cricket, Shanghai, Killer…); règles glossaire (`Best of 5 = first to 3…`, `double out` in body copy); code prop `route` / CSS `live-dot`.
+
+## UX — byes double knockout + couleurs matchs (2026-09-22)
+
+### Règle byes (double élimination uniquement)
+
+Fichier : `assets/store-QFDO1GxK.js` (`fo` + `vo`).
+
+1. **Winners** : `so()` pad toujours à la prochaine puissance de 2 (byes structurels minimaux). Les exemptés sont déjà placés dans le tour suivant via `winnerId`. **Les fixtures `bye: true` sont filtrées** avant d’être renvoyées — plus de cartes « (exempt) » qui inondent le tableau.
+2. **Losers** : on n’alloue des slots que s’il y a des matchs winners non-bye dans ce tour (`n > 0 ? ceil(n/2) : 0`) — plus de `Math.max(1, …)` qui créait un slot losers vide inutile.
+3. **Auto-avance losers** : quand tous les matchs winners réels d’un tour ont un résultat, un slot losers à un seul joueur devient un bye structurel silencieux (`bye` + `co`) — pas de carte exemption pré-créée.
+4. **Single elim / round-robin / swiss / poules** : inchangés (`so` / `oo` / `uo` partagés non modifiés pour ces chemins).
+
+### Couleurs matchs à jouer vs terminés
+
+- CSS : `assets/styles-1TJcdQM2.css` — classes `.oche-fx`, `.oche-fx--play`, `.oche-fx--done`, `.oche-fx--wait`, badges `.oche-fx__badge--play` / `--done`.
+- Hooks JS : `assets/tournoi._tournoiId-ITiWU32V.js` (carte tableau), `assets/tournois-XnE5crA0.js` (aperçu).
+- À jouer : bordure cream chaude + fond vert board + badge « À jouer ».
+- Terminé : teinte verte atténuée, opacite ~0.72, badge « Terminé ».
+- En attente : fond raised, opacité 0.8.
+
+Supabase share wiring (`share-config.js` / `share-backend.js`) non touché.

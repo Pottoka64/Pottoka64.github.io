@@ -2535,3 +2535,48 @@
     opacity: 0.5;
   }
 }
+
+/* OCHE match cards — à jouer vs terminé (dark board aesthetic) */
+.oche-fx {
+  width: 100%;
+  border-radius: var(--radius-md);
+  border-width: 2px;
+  border-style: solid;
+  padding: 0.5rem 0.75rem;
+  text-align: left;
+  transition: border-color 0.15s ease, background-color 0.15s ease, opacity 0.15s ease;
+}
+.oche-fx--play {
+  border-color: var(--color-board-cream);
+  background-color: color-mix(in oklab, var(--color-board-green) 28%, transparent);
+  box-shadow: var(--shadow-stamp-cream);
+}
+.oche-fx--play:hover {
+  background-color: color-mix(in oklab, var(--color-board-green) 42%, transparent);
+}
+.oche-fx--done {
+  border-color: color-mix(in oklab, var(--color-board-green) 35%, transparent);
+  background-color: color-mix(in oklab, var(--color-board-cream) 8%, transparent);
+  box-shadow: var(--shadow-border);
+  opacity: 0.72;
+}
+.oche-fx--wait {
+  border-color: transparent;
+  background-color: var(--color-raised);
+  box-shadow: var(--shadow-border);
+  opacity: 0.8;
+}
+.oche-fx__badge {
+  margin-top: 0.25rem;
+  font-size: 0.75rem;
+  line-height: 1rem;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+}
+.oche-fx__badge--play {
+  color: var(--color-board-cream);
+  font-weight: 600;
+}
+.oche-fx__badge--done {
+  color: color-mix(in oklab, var(--color-board-green) 75%, var(--color-muted));
+}

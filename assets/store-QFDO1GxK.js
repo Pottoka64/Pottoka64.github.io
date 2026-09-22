@@ -4578,13 +4578,19 @@ function fo(e) {
     );
   }
   if (e.type === `double`) {
+    // Double knockout bye rule (see NOTES.md):
+    // - Winners: pad to next power of 2 via so(); bye recipients are already
+    //   seeded into later rounds via winnerId. Drop bye fixtures so the board
+    //   is not flooded with "(exempt)" cards.
+    // - Losers: only allocate slots from real (non-bye) winners matches; never
+    //   force a losers round when that winners round produced 0 losers.
     let t = so(e.playerIds, `winners`),
       n = Math.max(...t.map((e) => e.round)),
       r = [],
       i = n + 1;
     for (let e = 0; e < i; e++) {
-      let n = t.filter((t) => t.round === e && !t.bye),
-        i = Math.max(1, Math.ceil(n.length / 2));
+      let n = t.filter((t) => t.round === e && !t.bye).length,
+        i = n > 0 ? Math.ceil(n / 2) : 0;
       for (let t = 0; t < i; t++)
         r.push({
           id: Q(),
@@ -4595,6 +4601,7 @@ function fo(e) {
           playerB: null,
         });
     }
+    t = t.filter((e) => !e.bye);
     let a = {
       id: Q(),
       round: 0,
@@ -4705,6 +4712,26 @@ function vo(e, t, n, r, i) {
         (!e.playerA || !e.playerB),
     );
     e && (e.playerA ? (e.playerB ||= s) : (e.playerA = s));
+    // After every real winners match in this round has a result, any losers
+    // fixture left with a single player is a structural bye — advance quietly
+    // (no extra exemption card was pre-created).
+    let pendingW = a.some(
+      (e) =>
+        e.bracket === `winners` &&
+        e.round === o.round &&
+        !e.bye &&
+        !e.winnerId,
+    );
+    if (!pendingW) {
+      for (let e of a.filter(
+        (e) => e.bracket === `losers` && e.round === o.round && !e.winnerId,
+      )) {
+        let t = (e.playerA && !e.playerB && e.playerA) || (!e.playerA && e.playerB && e.playerB);
+        if (t) {
+          (e.bye = !0), (e.winnerId = t), co(a, e, t);
+        }
+      }
+    }
   }
   if (e.type === `double`) {
     let e = a.find(
