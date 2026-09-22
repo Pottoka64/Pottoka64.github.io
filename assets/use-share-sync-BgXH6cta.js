@@ -111,6 +111,7 @@ function m({ tournament: e }) {
     n = c((e) => e.claimHost),
     [a, o] = (0, d.useState)(!1),
     [s, l] = (0, d.useState)(!1),
+    [H, R] = (0, d.useState)(!1),
     [p, m] = (0, d.useState)(``),
     [h, g] = (0, d.useState)(!1),
     [_, v] = (0, d.useState)(null),
@@ -131,6 +132,16 @@ function m({ tournament: e }) {
           window.setTimeout(() => l(!1), 1600);
       } catch {
         l(!1);
+      }
+    },
+    N = async () => {
+      if (!x) return;
+      try {
+        await navigator.clipboard.writeText(x),
+          R(!0),
+          window.setTimeout(() => R(!1), 1600);
+      } catch {
+        R(!1);
       }
     },
     w = async () => {
@@ -189,8 +200,8 @@ function m({ tournament: e }) {
               (0, f.jsx)(`p`, {
                 className: `mt-2 text-sm text-accent-fg/75`,
                 children: b
-                  ? `Dictez le code salon à la salle. Le code marqueur, tu le gardes.`
-                  : `Tu suis le tableau en direct. Pour brasser ou saisir, vérifie le rôle marqueur.`,
+                  ? `Dictez le code salon à toute la salle. Le code marqueur, seulement aux personnes qui saisissent les scores.`
+                  : `Tu suis le tableau en direct. Entre le code marqueur pour pouvoir saisir les scores.`,
               }),
             ],
           })
@@ -214,7 +225,14 @@ function m({ tournament: e }) {
             }),
             (0, f.jsx)(`p`, {
               className: `mt-1 text-sm text-accent-fg/75`,
-              children: `Pour reprendre le rôle sur un autre téléphone. Ne le montre pas à la salle.`,
+              children: `Code marqueur — à donner aux personnes qui saisissent les scores (pas à toute la salle). Réservé aux marqueurs.`,
+            }),
+            (0, f.jsx)(u, {
+              className: `mt-3`,
+              type: `button`,
+              variant: `secondary`,
+              onClick: () => void N(),
+              children: H ? `Code copié` : `Copier le code marqueur`,
             }),
           ],
         }),
@@ -227,7 +245,7 @@ function m({ tournament: e }) {
             (0, f.jsxs)(`label`, {
               className: `flex flex-col gap-2 text-sm text-accent-fg/75`,
               children: [
-                `Vérifier le rôle`,
+                `Entre le code marqueur pour pouvoir saisir les scores`,
                 (0, f.jsx)(`input`, {
                   value: p,
                   onChange: (e) => {
@@ -251,7 +269,7 @@ function m({ tournament: e }) {
               type: `submit`,
               variant: `secondary`,
               disabled: h || p.trim().length < 6,
-              children: h ? `Vérification…` : `Vérifier le rôle`,
+              children: h ? `Vérification…` : `Devenir marqueur`,
             }),
           ],
         }),

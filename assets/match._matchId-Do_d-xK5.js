@@ -73,8 +73,22 @@ function S({ match: e }) {
       Object.fromEntries(e.playerIds.map((e) => [e, O[e] ?? 0])),
     ),
     [j, M] = (0, _.useState)(null),
+    [F, I] = (0, _.useState)(``),
+    [L, z] = (0, _.useState)(!1),
+    [B, V] = (0, _.useState)(null),
+    q = l((e) => e.claimHost),
     N = c({ ...e, status: `playing`, winnerId: void 0 }, k),
-    P = T ? null : o(e, k);
+    P = T ? null : o(e, k),
+    U = async (t) => {
+      t.preventDefault(),
+        V(null),
+        z(!0);
+      let n = m ? await q(m.id, F) : !1;
+      z(!1),
+        n
+          ? I(``)
+          : V(`Rôle refusé. Vérifie le code marqueur.`);
+    };
   return (0, v.jsxs)(`main`, {
     className: `oche-match mx-auto max-w-lg px-4 py-8`,
     children: [
@@ -94,7 +108,7 @@ function S({ match: e }) {
           ` `,
           C,
           T && e.winnerId ? ` · ${y(e.winnerId, t)}` : ``,
-          D ? ` · Seul le créateur saisit le score` : ``,
+          D ? ` · Lecture seule — code marqueur requis` : ``,
         ],
       }),
       (0, v.jsx)(`div`, {
@@ -156,6 +170,67 @@ function S({ match: e }) {
           );
         }),
       }),
+      D &&
+        m?.shareCode &&
+        (0, v.jsxs)(`div`, {
+          className: `mt-6 rounded-[var(--radius-md)] border-2 border-inset surface-card px-4 py-4`,
+          children: [
+            (0, v.jsx)(`p`, {
+              className: `text-sm text-muted`,
+              children: `Pour saisir le score, demande le code marqueur au créateur du salon (pas le code salon).`,
+            }),
+            (0, v.jsxs)(`form`, {
+              className: `mt-3`,
+              onSubmit: (e) => void U(e),
+              children: [
+                (0, v.jsxs)(`label`, {
+                  className: `flex flex-col gap-2 text-sm text-muted`,
+                  children: [
+                    `Code marqueur`,
+                    (0, v.jsx)(`input`, {
+                      value: F,
+                      onChange: (e) => {
+                        I(e.target.value.toUpperCase()), V(null);
+                      },
+                      placeholder: `ex. K7M2PX`,
+                      autoComplete: `off`,
+                      spellCheck: !1,
+                      className: `field`,
+                      maxLength: 12,
+                    }),
+                  ],
+                }),
+                B &&
+                  (0, v.jsx)(`p`, {
+                    className: `mt-2 text-sm text-danger`,
+                    children: B,
+                  }),
+                (0, v.jsxs)(`div`, {
+                  className: `mt-3 flex flex-wrap gap-3`,
+                  children: [
+                    (0, v.jsx)(g, {
+                      type: `submit`,
+                      variant: `secondary`,
+                      disabled: L || F.trim().length < 6,
+                      children: L ? `Vérification…` : `Devenir marqueur`,
+                    }),
+                    e.tournamentId &&
+                      (0, v.jsx)(g, {
+                        variant: `ghost`,
+                        type: `button`,
+                        asChild: !0,
+                        children: (0, v.jsx)(p, {
+                          to: `/tournoi/$tournoiId`,
+                          params: { tournoiId: e.tournamentId },
+                          children: `Retour au tableau`,
+                        }),
+                      }),
+                  ],
+                }),
+              ],
+            }),
+          ],
+        }),
       !T &&
         !D &&
         P &&

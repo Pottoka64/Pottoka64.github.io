@@ -126,7 +126,7 @@ function b() {
         t.status !== `complete` &&
         (0, y.jsx)(`p`, {
           className: `mt-3 text-sm text-muted`,
-          children: `Lecture. Seul le créateur du salon peut brasser le tableau et saisir les scores.`,
+          children: `Lecture. Entre le code marqueur (carte Partage ci-dessous) pour saisir les scores.`,
         }),
       (0, y.jsx)(`div`, {
         className: `mt-6`,
