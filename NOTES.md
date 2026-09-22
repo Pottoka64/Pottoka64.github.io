@@ -161,7 +161,7 @@ Pass UI-facing applied on bundled assets (string literals only):
 | Old | New | Files |
 |---|---|---|
 | `Live` (stamp accueil) | `En direct` | `routes-CBx5FAnF.js`, `index.html` |
-| `Manches (best of)` | `Manches (au meilleur des)` | `jouer-CGEhcuTd.js`, `tournois-XnE5crA0.js` |
+| `Manches (best of)` | `Manches (au meilleur des)` | `jouer-CGEhcuTd.js`, `tournois-oche-v2.js` |
 | `Best of N` (options) | `Au meilleur des N` | idem |
 | `First to …` | `Premier à …` | `jouer`, `tournois`, `match._matchId` |
 | `Sets (0 = manches seules)` | `Sets (0 = manches uniquement)` | `jouer-CGEhcuTd.js` |
@@ -186,8 +186,8 @@ Fichier : `assets/store-QFDO1GxK.js` (`fo` + `vo`).
 
 ### Couleurs matchs à jouer vs terminés
 
-- CSS : `assets/styles-1TJcdQM2.css` — classes `.oche-fx`, `.oche-fx--play`, `.oche-fx--done`, `.oche-fx--wait`, badges `.oche-fx__badge--play` / `--done`.
-- Hooks JS : `assets/tournoi._tournoiId-ITiWU32V.js` (carte tableau), `assets/tournois-XnE5crA0.js` (aperçu).
+- CSS : `assets/styles-oche-v2.css` — classes `.oche-fx`, `.oche-fx--play`, `.oche-fx--done`, `.oche-fx--wait`, badges `.oche-fx__badge--play` / `--done`.
+- Hooks JS : `assets/tournoi._tournoiId-oche-v2.js` (carte tableau), `assets/tournois-oche-v2.js` (aperçu).
 - À jouer : bordure cream chaude + fond vert board + badge « À jouer ».
 - Terminé : teinte verte atténuée, opacite ~0.72, badge « Terminé ».
 - En attente : fond raised, opacité 0.8.

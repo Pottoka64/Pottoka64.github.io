@@ -14,7 +14,79 @@ function _(e, t) {
 }
 function v({ fx: e, names: t }) {
   let n = !!(e.winnerId && !e.bye),
-    i = !!(e.playerA && e.playerB && !e.winnerId && !e.bye);
+    i = !!(e.playerA && e.playerB && !e.winnerId && !e.bye),
+    a = i
+      ? {
+          background: `#1f6b45`,
+          border: `3px solid #f0d9a6`,
+          boxShadow: `4px 4px 0 0 #f0d9a6`,
+          color: `#f7f0e4`,
+          opacity: 1,
+          borderRadius: `12px`,
+          padding: `12px 14px`,
+          width: `100%`,
+          textAlign: `left`,
+        }
+      : n
+        ? {
+            background: `#1a1614`,
+            border: `2px solid #5a534c`,
+            borderLeft: `5px solid #8a8178`,
+            opacity: 0.55,
+            color: `#9a9086`,
+            borderRadius: `12px`,
+            padding: `12px 14px`,
+            width: `100%`,
+            textAlign: `left`,
+          }
+        : {
+            background: `#2a2438`,
+            border: `3px dashed #e09a3a`,
+            color: `#d8d0e8`,
+            opacity: 1,
+            borderRadius: `12px`,
+            padding: `12px 14px`,
+            width: `100%`,
+            textAlign: `left`,
+          },
+    o = i
+      ? {
+          background: `#f0d9a6`,
+          color: `#1a1614`,
+          display: `inline-block`,
+          marginTop: `8px`,
+          padding: `2px 8px`,
+          borderRadius: `999px`,
+          fontSize: `11px`,
+          fontWeight: 700,
+          letterSpacing: `0.04em`,
+          textTransform: `uppercase`,
+        }
+      : n
+        ? {
+            background: `#3a342e`,
+            color: `#9a9086`,
+            display: `inline-block`,
+            marginTop: `8px`,
+            padding: `2px 8px`,
+            borderRadius: `999px`,
+            fontSize: `11px`,
+            fontWeight: 700,
+            letterSpacing: `0.04em`,
+            textTransform: `uppercase`,
+          }
+        : {
+            background: `#e09a3a`,
+            color: `#1a1614`,
+            display: `inline-block`,
+            marginTop: `8px`,
+            padding: `2px 8px`,
+            borderRadius: `999px`,
+            fontSize: `11px`,
+            fontWeight: 700,
+            letterSpacing: `0.04em`,
+            textTransform: `uppercase`,
+          };
   return (0, g.jsxs)(`div`, {
     className: r(
       `oche-fx`,
@@ -22,6 +94,7 @@ function v({ fx: e, names: t }) {
       n && `oche-fx--done`,
       !i && !n && `oche-fx--wait`,
     ),
+    style: a,
     children: [
       (0, g.jsxs)(`p`, {
         className: `truncate text-sm`,
@@ -37,17 +110,20 @@ function v({ fx: e, names: t }) {
       i &&
         (0, g.jsx)(`p`, {
           className: `oche-fx__badge oche-fx__badge--play`,
+          style: o,
           children: `À jouer`,
         }),
       n &&
         (0, g.jsx)(`p`, {
           className: `oche-fx__badge oche-fx__badge--done`,
+          style: o,
           children: `Terminé`,
         }),
       !i &&
         !n &&
         (0, g.jsx)(`p`, {
           className: `oche-fx__badge oche-fx__badge--wait`,
+          style: o,
           children: `En attente`,
         }),
     ],

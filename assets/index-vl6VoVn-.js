@@ -18,10 +18,10 @@ const __vite__mapDeps = (
       "assets/joueurs-Bgj0OGlR.js",
       "assets/score-table-DYx8e5aU.js",
       "assets/regles-CmQFYbOL.js",
-      "assets/tournois-XnE5crA0.js",
+      "assets/tournois-oche-v2.js",
       "assets/match._matchId-Do_d-xK5.js",
       "assets/salle._code-C9D-378V.js",
-      "assets/tournoi._tournoiId-ITiWU32V.js",
+      "assets/tournoi._tournoiId-oche-v2.js",
       "assets/use-share-sync-BgXH6cta.js",
       "assets/tournoi_._tournoiId.finale-BGrXupdd.js",
     ]),
@@ -21142,7 +21142,7 @@ function Wd({ children: e }) {
     })
   );
 }
-var Gd = `/assets/styles-1TJcdQM2.css`,
+var Gd = `/assets/styles-oche-v2.css`,
   Kd = `OCHE`,
   qd = pr({
     head: () => ({
@@ -21308,7 +21308,7 @@ var Gd = `/assets/styles-1TJcdQM2.css`,
     component: hr(
       () =>
         Zd(
-          () => import(`./tournois-XnE5crA0.js`),
+          () => import(`./tournois-oche-v2.js`),
           __vite__mapDeps([15, 1, 3, 2, 4, 5, 6, 7, 8, 11]),
         ),
       `component`,
@@ -21338,7 +21338,7 @@ var Gd = `/assets/styles-1TJcdQM2.css`,
     component: hr(
       () =>
         Zd(
-          () => import(`./tournoi._tournoiId-ITiWU32V.js`),
+          () => import(`./tournoi._tournoiId-oche-v2.js`),
           __vite__mapDeps([18, 1, 2, 3, 4, 5, 6, 8, 13, 19]),
         ),
       `component`,

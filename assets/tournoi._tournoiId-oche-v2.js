@@ -271,7 +271,79 @@ function x({ fx: e, nameOf: n, onPlay: r, canPlay: i }) {
   let a = !!(e.playerA && e.playerB && !e.winnerId && !e.bye),
     s = !!(e.winnerId && !e.bye),
     o = e.winnerId && e.scoreA != null && e.scoreB != null,
-    c = !!(a && i);
+    c = !!(a && i),
+    l = a
+      ? {
+          background: `#1f6b45`,
+          border: `3px solid #f0d9a6`,
+          boxShadow: `4px 4px 0 0 #f0d9a6`,
+          color: `#f7f0e4`,
+          opacity: 1,
+          borderRadius: `12px`,
+          padding: `12px 14px`,
+          width: `100%`,
+          textAlign: `left`,
+        }
+      : s
+        ? {
+            background: `#1a1614`,
+            border: `2px solid #5a534c`,
+            borderLeft: `5px solid #8a8178`,
+            opacity: 0.55,
+            color: `#9a9086`,
+            borderRadius: `12px`,
+            padding: `12px 14px`,
+            width: `100%`,
+            textAlign: `left`,
+          }
+        : {
+            background: `#2a2438`,
+            border: `3px dashed #e09a3a`,
+            color: `#d8d0e8`,
+            opacity: 1,
+            borderRadius: `12px`,
+            padding: `12px 14px`,
+            width: `100%`,
+            textAlign: `left`,
+          },
+    u = a
+      ? {
+          background: `#f0d9a6`,
+          color: `#1a1614`,
+          display: `inline-block`,
+          marginTop: `8px`,
+          padding: `2px 8px`,
+          borderRadius: `999px`,
+          fontSize: `11px`,
+          fontWeight: 700,
+          letterSpacing: `0.04em`,
+          textTransform: `uppercase`,
+        }
+      : s
+        ? {
+            background: `#3a342e`,
+            color: `#9a9086`,
+            display: `inline-block`,
+            marginTop: `8px`,
+            padding: `2px 8px`,
+            borderRadius: `999px`,
+            fontSize: `11px`,
+            fontWeight: 700,
+            letterSpacing: `0.04em`,
+            textTransform: `uppercase`,
+          }
+        : {
+            background: `#e09a3a`,
+            color: `#1a1614`,
+            display: `inline-block`,
+            marginTop: `8px`,
+            padding: `2px 8px`,
+            borderRadius: `999px`,
+            fontSize: `11px`,
+            fontWeight: 700,
+            letterSpacing: `0.04em`,
+            textTransform: `uppercase`,
+          };
   return (0, y.jsxs)(`button`, {
     type: `button`,
     onClick: c ? r : void 0,
@@ -282,6 +354,7 @@ function x({ fx: e, nameOf: n, onPlay: r, canPlay: i }) {
       s && `oche-fx--done`,
       !a && !s && `oche-fx--wait`,
     ),
+    style: l,
     children: [
       (0, y.jsxs)(`div`, {
         className: `flex items-baseline justify-between gap-3`,
@@ -320,17 +393,20 @@ function x({ fx: e, nameOf: n, onPlay: r, canPlay: i }) {
       a &&
         (0, y.jsx)(`p`, {
           className: `oche-fx__badge oche-fx__badge--play`,
+          style: u,
           children: c ? `À jouer · saisir le score` : `À jouer`,
         }),
       s &&
         (0, y.jsx)(`p`, {
           className: `oche-fx__badge oche-fx__badge--done`,
+          style: u,
           children: `Terminé`,
         }),
       !a &&
         !s &&
         (0, y.jsx)(`p`, {
           className: `oche-fx__badge oche-fx__badge--wait`,
+          style: u,
           children: `En attente`,
         }),
     ],
