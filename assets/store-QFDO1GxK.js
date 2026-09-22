@@ -1,6 +1,14 @@
 import { r as e } from "./jsx-runtime-BkSabwWG.js";
 import { f as t, r as n, v as r } from "./useRouter-B1ejQzOU.js";
 import { n as i, r as a } from "./types-UrLSRqj_.js";
+import {
+  Wo as __ocheShareWo,
+  Go as __ocheShareGo,
+  Ko as __ocheShareKo,
+  qo as __ocheShareQo,
+  Jo as __ocheShareJo,
+  Yo as __ocheShareYo,
+} from "./share-backend.js";
 var o = `__TSS_CONTEXT`,
   s = Symbol.for(`TSS_SERVER_FUNCTION`),
   c = Symbol.for(`TSS_SERVER_FUNCTION_FACTORY`),
@@ -5169,24 +5177,12 @@ function Uo(e) {
     },
   };
 }
-var Wo = $({ method: `POST` }).handler(
-    H(`7f4e3f032fcf7c4cb14e52351ae7c4a3f17bfd1ed3d3cf4e8872c7f52e8eed97`),
-  ),
-  Go = $({ method: `POST` }).handler(
-    H(`6165e10729ac21b04395fdeea6b426080f0acf4aa4f7ef1d397ca7c0423db2cc`),
-  ),
-  Ko = $({ method: `POST` }).handler(
-    H(`88b15306dc3db8589cf15518d959a5303188288ea251a93164702332256a27d6`),
-  ),
-  qo = $({ method: `POST` }).handler(
-    H(`938ab3d952db33a97db700439ad33d2d365f95de73ae5b0527a968fa1dcab1fd`),
-  ),
-  Jo = $({ method: `POST` }).handler(
-    H(`5c173591e37e1805780b1845cc207a49da81ea00cd889d3759427be643a71ace`),
-  ),
-  Yo = $({ method: `POST` }).handler(
-    H(`b82024bf3f48eb4564d0dca47bd0b9087bcad434a1fa44dbf53ab3e6fc0ef54f`),
-  ),
+var Wo = __ocheShareWo,
+  Go = __ocheShareGo,
+  Ko = __ocheShareKo,
+  qo = __ocheShareQo,
+  Jo = __ocheShareJo,
+  Yo = __ocheShareYo,
   Xo = [
     { id: `p-camille`, name: `Camille`, createdAt: 1 },
     { id: `p-julien`, name: `Julien`, createdAt: 2 },

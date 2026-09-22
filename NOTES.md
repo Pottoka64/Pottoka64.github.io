@@ -7,7 +7,7 @@ Les numéros de ligne ci-dessous correspondent à l’état **après** Prettier.
 
 - React + TanStack Router/Start + Zustand + Vite
 - Persistance locale : `localStorage` clé `oche-steel-tip` (`assets/store-QFDO1GxK.js`)
-- Partage salon : server functions TanStack → `POST /_serverFn/<hash>` (backend grok.me, pas embarqué ici)
+- Partage salon : Supabase RPCs via `assets/share-backend.js` (ex-TanStack `/_serverFn/<hash>` ; voir section Share backend)
 
 ## English UI strings → où changer
 
@@ -74,7 +74,7 @@ Dans `formats-M2QI3UJX.js` / store : Cricket cut-throat, Killer, Knockout, Shang
 
 ## Join-code — gestion d’erreurs
 
-Deux chemins UI, tous deux appellent `joinTournament` du store (qui POST `/_serverFn/6165e107…`) :
+Deux chemins UI, tous deux appellent `joinTournament` du store (→ `Go` / `share_get` via `share-backend.js`) :
 
 ### 1. Formulaire accueil / tournois — `assets/join-form-plRLSa1H.js`
 
@@ -100,9 +100,9 @@ Deux chemins UI, tous deux appellent `joinTournament` du store (qui POST `/_serv
 
 Sans backend grok.me, **tout join échoue** → les messages « salon introuvable » s’affichent même pour un code valide publié ailleurs.
 
-## API / server functions (backend requis)
+## API / server functions (historique grok.me)
 
-Tous en `POST`, header `x-tsr-serverFn: true`, corps JSON sérialisé TanStack :
+**Remplacé** par Supabase RPCs — voir section « Share backend » ci-dessous. Anciens hashes TanStack (référence) :
 
 | Alias build | Endpoint | Rôle |
 |---|---|---|
@@ -113,7 +113,34 @@ Tous en `POST`, header `x-tsr-serverFn: true`, corps JSON sérialisé TanStack :
 | `Jo` | `/_serverFn/5c173591e37e1805780b1845cc207a49da81ea00cd889d3759427be643a71ace` | Fermer salon |
 | `Yo` | `/_serverFn/b82024bf3f48eb4564d0dca47bd0b9087bcad434a1fa44dbf53ab3e6fc0ef54f` | Claim host (code marqueur) |
 
-Probe live sans contexte Build Mode → **403 Forbidden**. Ces handlers **ne sont pas** dans ce dépôt.
+Probe live sans contexte Build Mode → **403 Forbidden**. Remplacés localement par `assets/share-backend.js` + `supabase/share_rooms.sql`.
+
+
+## Share backend (Supabase) — 2026-09-22
+
+Replaces grok.me `/_serverFn/*` for the six salon ops (`Wo`/`Go`/`Ko`/`qo`/`Jo`/`Yo`).
+
+| File | Role |
+|---|---|
+| `assets/share-config.js` | `SHARE.supabaseUrl` + `SHARE.supabaseAnonKey` (empty until filled) + `isShareConfigured()` |
+| `assets/share-backend.js` | Adapters `{ data }` → Supabase RPC (`share_publish`, `share_get`, …) |
+| `supabase/share_rooms.sql` | Table + SECURITY DEFINER RPCs + RLS (deny direct table access) |
+| `assets/store-QFDO1GxK.js` | Imports adapters; no longer POSTs those six hashes to `/_serverFn` |
+
+**Wiring:** store is already `type=module`; it imports `./share-backend.js`. `index.html` modulepreloads `share-config.js` + `share-backend.js` before the store. `use-share-sync` unchanged (still imports `Go`/`qo` via store re-exports).
+
+**Fill config:** edit `assets/share-config.js`:
+
+```js
+export const SHARE = {
+  supabaseUrl: 'https://YOUR_PROJECT.supabase.co',
+  supabaseAnonKey: 'eyJ…',  // anon public key
+};
+```
+
+Then paste `supabase/share_rooms.sql` into the Supabase SQL editor. When URL/key are empty, publish/join fail gracefully (`null` / `{ ok:false }`) so local play still works.
+
+**Contract:** see `SHARE_API.md`.
 
 ## Routes client découvertes
 
