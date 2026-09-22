@@ -13,7 +13,7 @@ import {
   y as f,
 } from "./store-QFDO1GxK.js";
 import { t as p } from "./link-BA5v6P_F.js";
-import { i as m, o as h } from "./index-vl6VoVn-.js";
+import { i as m, o as h } from "./index-oche-v2.js";
 import { t as g } from "./button-DVevz7Ul.js";
 var _ = e(n(), 1),
   v = t();

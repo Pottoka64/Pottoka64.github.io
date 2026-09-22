@@ -2,7 +2,7 @@ import { r as e, t } from "./jsx-runtime-BkSabwWG.js";
 import { v as n } from "./useRouter-B1ejQzOU.js";
 import { S as r, f as i, p as a, s as o, t as s } from "./store-QFDO1GxK.js";
 import { t as c } from "./link-BA5v6P_F.js";
-import { o as l } from "./index-vl6VoVn-.js";
+import { o as l } from "./index-oche-v2.js";
 import { t as u } from "./button-DVevz7Ul.js";
 import { t as d } from "./join-form-plRLSa1H.js";
 import { n as f, t as p } from "./formats-M2QI3UJX.js";

@@ -1,7 +1,7 @@
 import { t as e } from "./jsx-runtime-BkSabwWG.js";
 import { S as t, d as n, l as r, t as i, x as a } from "./store-QFDO1GxK.js";
 import { t as o } from "./link-BA5v6P_F.js";
-import { t as s } from "./index-vl6VoVn-.js";
+import { t as s } from "./index-oche-v2.js";
 import { t as c } from "./button-DVevz7Ul.js";
 import { n as l } from "./formats-M2QI3UJX.js";
 import { t as u } from "./score-table-DYx8e5aU.js";

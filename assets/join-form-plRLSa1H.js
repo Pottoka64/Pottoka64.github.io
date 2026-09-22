@@ -1,7 +1,7 @@
 import { r as e, t } from "./jsx-runtime-BkSabwWG.js";
 import { v as n } from "./useRouter-B1ejQzOU.js";
 import { t as r } from "./store-QFDO1GxK.js";
-import { o as i } from "./index-vl6VoVn-.js";
+import { o as i } from "./index-oche-v2.js";
 import { t as a } from "./button-DVevz7Ul.js";
 var o = e(n(), 1),
   s = t();

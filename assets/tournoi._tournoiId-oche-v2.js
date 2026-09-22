@@ -11,7 +11,7 @@ import {
   x as l,
 } from "./store-QFDO1GxK.js";
 import { t as u } from "./link-BA5v6P_F.js";
-import { n as d, o as f } from "./index-vl6VoVn-.js";
+import { n as d, o as f } from "./index-oche-v2.js";
 import { t as p } from "./button-DVevz7Ul.js";
 import { n as m } from "./formats-M2QI3UJX.js";
 import { t as h } from "./score-table-DYx8e5aU.js";
