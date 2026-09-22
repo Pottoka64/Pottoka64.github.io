@@ -268,13 +268,14 @@ function b() {
   });
 }
 function x({ fx: e, nameOf: n, onPlay: r, canPlay: i }) {
-  let a = !!(i && e.playerA && e.playerB && !e.winnerId && !e.bye),
+  let a = !!(e.playerA && e.playerB && !e.winnerId && !e.bye),
     s = !!(e.winnerId && !e.bye),
-    o = e.winnerId && e.scoreA != null && e.scoreB != null;
+    o = e.winnerId && e.scoreA != null && e.scoreB != null,
+    c = !!(a && i);
   return (0, y.jsxs)(`button`, {
     type: `button`,
-    onClick: a ? r : void 0,
-    disabled: !a,
+    onClick: c ? r : void 0,
+    disabled: !c,
     className: t(
       `oche-fx`,
       a && `oche-fx--play`,
@@ -319,7 +320,7 @@ function x({ fx: e, nameOf: n, onPlay: r, canPlay: i }) {
       a &&
         (0, y.jsx)(`p`, {
           className: `oche-fx__badge oche-fx__badge--play`,
-          children: `À jouer · saisir le score`,
+          children: c ? `À jouer · saisir le score` : `À jouer`,
         }),
       s &&
         (0, y.jsx)(`p`, {
