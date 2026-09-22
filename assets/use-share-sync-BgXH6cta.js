@@ -109,12 +109,16 @@ function p({ tournament: e }) {
 function m({ tournament: e }) {
   let t = c((e) => e.publishTournament),
     n = c((e) => e.claimHost),
+    J = c((e) => e.joinTournament),
     [a, o] = (0, d.useState)(!1),
     [s, l] = (0, d.useState)(!1),
     [H, R] = (0, d.useState)(!1),
     [p, m] = (0, d.useState)(``),
     [h, g] = (0, d.useState)(!1),
     [_, v] = (0, d.useState)(null),
+    [Y, Z] = (0, d.useState)(``),
+    [X, Q] = (0, d.useState)(!1),
+    [W, K] = (0, d.useState)(null),
     y = e.shareCode,
     b = r(e),
     x = b && e.hostSecret && i(e.hostSecret) ? e.hostSecret : null;
@@ -164,9 +168,24 @@ function m({ tournament: e }) {
       t.preventDefault(), g(!0), v(null);
       let r = await n(e.id, p);
       g(!1), r ? m(``) : v(`Rôle refusé. Vérifie le code marqueur.`);
+    },
+    P = async (t) => {
+      t.preventDefault(), Q(!0), K(null);
+      let n = await J(Y.trim());
+      if ((Q(!1), !n)) {
+        K(`Ce salon n’existe pas ou a été fermé. Vérifie le code et réessaie.`);
+        return;
+      }
+      if (n !== e.id) {
+        K(`Ce code ouvre un autre tournoi. Utilise le bon code salon.`);
+        return;
+      }
+      Z(``);
     };
   return (0, f.jsxs)(`div`, {
-    className: `oche-club-edge surface-card card-cream relative overflow-hidden px-4 py-5`,
+    className:
+      `oche-club-edge surface-card card-cream relative overflow-hidden px-4 py-5` +
+      (!b && y ? ` oche-share-sticky` : ``),
     children: [
       (0, f.jsx)(`div`, {
         className: `stripe-board pointer-events-none absolute inset-x-0 top-0`,
@@ -205,12 +224,48 @@ function m({ tournament: e }) {
               }),
             ],
           })
-        : (0, f.jsx)(`p`, {
-            className: `mt-2 text-sm text-accent-fg/75`,
-            children: a
-              ? `On ouvre le salon…`
-              : `Publiez le tournoi pour que chaque téléphone suive le même score.`,
-          }),
+        : b
+          ? (0, f.jsx)(`p`, {
+              className: `mt-2 text-sm text-accent-fg/75`,
+              children: a
+                ? `On ouvre le salon…`
+                : `Publiez le tournoi pour que chaque téléphone suive le même score.`,
+            })
+          : (0, f.jsxs)(`form`, {
+              className: `mt-3`,
+              onSubmit: (e) => void P(e),
+              children: [
+                (0, f.jsxs)(`label`, {
+                  className: `flex flex-col gap-2 text-sm text-accent-fg/75`,
+                  children: [
+                    `Salon non synchronisé. Entre le code salon pour activer le code marqueur.`,
+                    (0, f.jsx)(`input`, {
+                      value: Y,
+                      onChange: (e) => {
+                        Z(e.target.value.toUpperCase()), K(null);
+                      },
+                      placeholder: `Code salon`,
+                      autoComplete: `off`,
+                      spellCheck: !1,
+                      className: `field`,
+                      maxLength: 8,
+                    }),
+                  ],
+                }),
+                W &&
+                  (0, f.jsx)(`p`, {
+                    className: `mt-2 text-sm text-danger`,
+                    children: W,
+                  }),
+                (0, f.jsx)(u, {
+                  className: `mt-3`,
+                  type: `submit`,
+                  variant: `secondary`,
+                  disabled: X || Y.trim().length < 4,
+                  children: X ? `Connexion…` : `Lier le salon`,
+                }),
+              ],
+            }),
       x &&
         (0, f.jsxs)(`div`, {
           className: `mt-4 rounded-[var(--radius-md)] border-2 border-inset bg-board-red/15 px-3 py-3`,
@@ -236,8 +291,7 @@ function m({ tournament: e }) {
             }),
           ],
         }),
-      !b &&
-        y &&
+      y &&
         (0, f.jsxs)(`form`, {
           className: `mt-4`,
           onSubmit: (e) => void T(e),
@@ -245,7 +299,9 @@ function m({ tournament: e }) {
             (0, f.jsxs)(`label`, {
               className: `flex flex-col gap-2 text-sm text-accent-fg/75`,
               children: [
-                `Entre le code marqueur pour pouvoir saisir les scores`,
+                b
+                  ? `Tu es marqueur. Tu peux re-saisir le code si besoin.`
+                  : `Entre le code marqueur pour pouvoir saisir les scores`,
                 (0, f.jsx)(`input`, {
                   value: p,
                   onChange: (e) => {
@@ -269,23 +325,28 @@ function m({ tournament: e }) {
               type: `submit`,
               variant: `secondary`,
               disabled: h || p.trim().length < 6,
-              children: h ? `Vérification…` : `Devenir marqueur`,
+              children: h
+                ? `Vérification…`
+                : b
+                  ? `Resaisir le code marqueur`
+                  : `Devenir marqueur`,
             }),
           ],
         }),
-      (0, f.jsx)(u, {
-        className: `mt-4`,
-        variant: y ? `secondary` : `default`,
-        onClick: () => void w(),
-        disabled: a,
-        children: a
-          ? `Publication…`
-          : s
-            ? `Lien copié`
-            : y
-              ? `Copier le lien`
-              : `Partager`,
-      }),
+      (b || y) &&
+        (0, f.jsx)(u, {
+          className: `mt-4`,
+          variant: y ? `secondary` : `default`,
+          onClick: () => void w(),
+          disabled: a,
+          children: a
+            ? `Publication…`
+            : s
+              ? `Lien copié`
+              : y
+                ? `Copier le lien`
+                : `Partager`,
+        }),
     ],
   });
 }

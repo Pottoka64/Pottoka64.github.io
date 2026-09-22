@@ -5425,16 +5425,20 @@ var ts = Ba()(
             let a = await Wo({
               data: { payload: i, hostSecret: r.hostSecret },
             });
-            return (
-              e({
-                tournaments: t().tournaments.map((e) =>
-                  e.id === n
-                    ? { ...e, shareCode: a.code, shareVersion: a.version }
-                    : e,
-                ),
-              }),
-              a.code
-            );
+            e({
+              tournaments: t().tournaments.map((e) =>
+                e.id === n
+                  ? { ...e, shareCode: a.code, shareVersion: a.version }
+                  : e,
+              ),
+            });
+            // Ré-pousse immédiatement pour graver shareCode dans le payload
+            // serveur (le 1er publish partait sans). Les joiners d'avant le
+            // fix client en profitent aussi au prochain poll.
+            try {
+              t().pushTournament(n);
+            } catch {}
+            return a.code;
           } catch {
             return null;
           }
@@ -5500,13 +5504,28 @@ var ts = Ba()(
                 });
             } catch {}
         }),
-      joinTournament: async (e) => {
+      joinTournament: async (n) => {
         try {
-          let n = await Go({ data: { code: e } });
-          return !n || n.closed || !n.payload
-            ? null
-            : (t().ingestSnapshot(n.payload, n.version),
-              n.payload.tournament.id);
+          let r = await Go({ data: { code: n } });
+          if (!r || r.closed || !r.payload) return null;
+          t().ingestSnapshot(r.payload, r.version);
+          let i = r.payload.tournament.id,
+            a = String(n)
+              .trim()
+              .toUpperCase();
+          // Toujours graver le code salon localement : le payload publié
+          // n'embarque souvent pas encore shareCode (posé après Wo).
+          // Sans ça, la carte Partage / « Devenir marqueur » reste cachée (!b && y).
+          return (
+            e({
+              tournaments: t().tournaments.map((e) =>
+                e.id === i
+                  ? { ...e, shareCode: e.shareCode || a }
+                  : e,
+              ),
+            }),
+            i
+          );
         } catch {
           return null;
         }

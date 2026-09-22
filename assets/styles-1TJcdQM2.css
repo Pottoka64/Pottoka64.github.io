@@ -2918,3 +2918,10 @@
     min-height: 3.5rem;
   }
 }
+
+/* Guest share card: keep claim form visible while scrolling the bracket */
+.oche-share-sticky {
+  position: sticky;
+  top: 3.5rem;
+  z-index: 20;
+}
