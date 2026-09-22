@@ -326,6 +326,12 @@ function x({ fx: e, nameOf: n, onPlay: r, canPlay: i }) {
           className: `oche-fx__badge oche-fx__badge--done`,
           children: `Terminé`,
         }),
+      !a &&
+        !s &&
+        (0, y.jsx)(`p`, {
+          className: `oche-fx__badge oche-fx__badge--wait`,
+          children: `En attente`,
+        }),
     ],
   });
 }

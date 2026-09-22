@@ -44,6 +44,12 @@ function v({ fx: e, names: t }) {
           className: `oche-fx__badge oche-fx__badge--done`,
           children: `Terminé`,
         }),
+      !i &&
+        !n &&
+        (0, g.jsx)(`p`, {
+          className: `oche-fx__badge oche-fx__badge--wait`,
+          children: `En attente`,
+        }),
     ],
   });
 }
@@ -165,7 +171,7 @@ function b() {
     [C, w] = (0, h.useState)(`501-do`),
     [T, E] = (0, h.useState)(() => e.slice(0, 4).map((e) => e.id)),
     [D, O] = (0, h.useState)(() => e.slice(0, 4).map((e) => e.id)),
-    [k, A] = (0, h.useState)(5),
+    [k, A] = (0, h.useState)(3),
     [j, M] = (0, h.useState)(0),
     [N, P] = (0, h.useState)(2),
     [F, I] = (0, h.useState)(2),
@@ -444,7 +450,7 @@ function b() {
           (0, g.jsxs)(`label`, {
             className: `flex flex-col gap-2 text-sm text-muted`,
             children: [
-              `Manches (au meilleur des)`,
+              `Manches — BO3 = au meilleur des 3`,
               (0, g.jsx)(`select`, {
                 value: k,
                 onChange: (e) => A(Number(e.target.value)),
@@ -452,7 +458,15 @@ function b() {
                 children: [1, 3, 5, 7, 9, 11].map((e) =>
                   (0, g.jsxs)(
                     `option`,
-                    { value: e, children: [`Au meilleur des `, e] },
+                    {
+                      value: e,
+                      children:
+                        e === 3
+                          ? `BO3 — Au meilleur des 3`
+                          : e === 1
+                            ? `1 manche`
+                            : [`Au meilleur des `, e],
+                    },
                     e,
                   ),
                 ),

@@ -113,7 +113,7 @@ function d() {
             children: [
               (0, u.jsx)(`span`, {
                 className: `text-sm text-muted`,
-                children: `Manches (au meilleur des)`,
+                children: `Manches — BO3 = au meilleur des 3`,
               }),
               (0, u.jsx)(`select`, {
                 value: g,
@@ -122,7 +122,15 @@ function d() {
                 children: [1, 3, 5, 7, 9, 11, 13].map((e) =>
                   (0, u.jsxs)(
                     `option`,
-                    { value: e, children: [`Au meilleur des `, e] },
+                    {
+                      value: e,
+                      children:
+                        e === 3
+                          ? `BO3 — Au meilleur des 3`
+                          : e === 1
+                            ? `1 manche`
+                            : [`Au meilleur des `, e],
+                    },
                     e,
                   ),
                 ),
