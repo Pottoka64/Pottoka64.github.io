@@ -66,7 +66,7 @@ function b() {
         .map((e) => ({ round: e, items: n.filter((t) => t.round === e) }));
     };
   return (0, y.jsxs)(`main`, {
-    className: `mx-auto max-w-5xl px-4 py-8`,
+    className: `oche-page mx-auto max-w-5xl px-4 py-8`,
     children: [
       (0, y.jsx)(`p`, {
         className: `text-xs uppercase tracking-[0.22em] text-board-cream`,

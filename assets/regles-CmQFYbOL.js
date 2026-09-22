@@ -258,7 +258,7 @@ function a() {
 }
 function o() {
   return (0, i.jsxs)(`main`, {
-    className: `mx-auto max-w-3xl px-4 py-8`,
+    className: `oche-page mx-auto max-w-3xl px-4 py-8`,
     children: [
       (0, i.jsx)(`p`, {
         className: `stamp stamp-green`,

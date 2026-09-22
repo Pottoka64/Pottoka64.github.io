@@ -29,25 +29,25 @@ function b() {
 }
 function x({ value: e, onChange: t, max: n, disabled: r }) {
   return (0, v.jsxs)(`div`, {
-    className: `flex items-center gap-3`,
+    className: `oche-stepper`,
     children: [
       (0, v.jsx)(`button`, {
         type: `button`,
         disabled: r || e <= 0,
         onClick: () => t(e - 1),
-        className: `inline-flex size-11 items-center justify-center rounded-[var(--radius-md)] bg-raised text-lg text-fg shadow-[var(--shadow-border)] disabled:opacity-40`,
+        className: `oche-stepper__btn`,
         "aria-label": `Moins`,
         children: `−`,
       }),
       (0, v.jsx)(`span`, {
-        className: `w-14 text-center font-display text-5xl font-semibold tabular-nums leading-none`,
+        className: `oche-stepper__value`,
         children: e,
       }),
       (0, v.jsx)(`button`, {
         type: `button`,
         disabled: r || e >= n,
         onClick: () => t(e + 1),
-        className: `inline-flex size-11 items-center justify-center rounded-[var(--radius-md)] bg-raised text-lg text-fg shadow-[var(--shadow-border)] disabled:opacity-40`,
+        className: `oche-stepper__btn`,
         "aria-label": `Plus`,
         children: `+`,
       }),
@@ -76,18 +76,18 @@ function S({ match: e }) {
     N = c({ ...e, status: `playing`, winnerId: void 0 }, k),
     P = T ? null : o(e, k);
   return (0, v.jsxs)(`main`, {
-    className: `mx-auto max-w-lg px-4 py-8`,
+    className: `oche-match mx-auto max-w-lg px-4 py-8`,
     children: [
       (0, v.jsx)(`p`, {
-        className: `text-xs uppercase tracking-[0.18em] text-subtle`,
+        className: `oche-match__chrome text-xs uppercase tracking-[0.18em] text-subtle`,
         children: d(e.format),
       }),
       (0, v.jsx)(`h1`, {
-        className: `mt-1 font-display text-4xl font-semibold tracking-tight text-board-cream`,
+        className: `oche-match__title mt-1 font-display text-4xl font-semibold tracking-tight text-board-cream`,
         children: T ? `Bravo.` : D ? `En cours` : `On marque`,
       }),
       (0, v.jsxs)(`p`, {
-        className: `mt-2 text-muted`,
+        className: `oche-match__meta mt-2 text-muted`,
         children: [
           `Premier à `,
           w,
@@ -98,17 +98,22 @@ function S({ match: e }) {
         ],
       }),
       (0, v.jsx)(`div`, {
-        className: `mt-8 grid gap-4`,
+        className: `oche-match__board mt-8 grid gap-4`,
         children: e.playerIds.map((n) => {
-          let i = T && e.winnerId === n;
+          let i = T && e.winnerId === n,
+            R = T ? (u(e)[n] ?? 0) : (k[n] ?? 0),
+            L =
+              !T &&
+              !D &&
+              Math.max(...e.playerIds.map((id) => k[id] ?? 0)) > 0 &&
+              R === Math.max(...e.playerIds.map((id) => k[id] ?? 0));
           return (0, v.jsxs)(
             `div`,
             {
               className: r(
-                `flex items-center justify-between gap-4 rounded-[var(--radius-xl)] border-2 px-4 py-4`,
-                i
-                  ? `border-inset bg-board-red text-fg shadow-[var(--shadow-stamp-cream)]`
-                  : `border-transparent bg-surface shadow-[var(--shadow-border)]`,
+                `oche-match__player`,
+                i && `oche-match__player--winner`,
+                !i && L && `oche-match__player--lead`,
               ),
               children: [
                 (0, v.jsxs)(`div`, {
@@ -116,8 +121,8 @@ function S({ match: e }) {
                   children: [
                     (0, v.jsx)(`p`, {
                       className: r(
-                        `truncate font-medium`,
-                        i ? `text-fg` : `text-muted`,
+                        `oche-match__name truncate`,
+                        i ? `text-fg` : `text-board-cream`,
                       ),
                       children: y(n, t),
                     }),
@@ -130,12 +135,12 @@ function S({ match: e }) {
                 }),
                 T
                   ? (0, v.jsx)(`p`, {
-                      className: `font-display text-5xl font-semibold tabular-nums leading-none`,
+                      className: `oche-match__score`,
                       children: u(e)[n] ?? 0,
                     })
                   : D
                     ? (0, v.jsx)(`p`, {
-                        className: `font-display text-5xl font-semibold tabular-nums leading-none text-subtle`,
+                        className: `oche-match__score text-subtle`,
                         children: `—`,
                       })
                     : (0, v.jsx)(x, {
@@ -158,7 +163,7 @@ function S({ match: e }) {
       j &&
         (0, v.jsx)(`p`, { className: `mt-4 text-sm text-danger`, children: j }),
       (0, v.jsxs)(`div`, {
-        className: `mt-8 flex flex-wrap gap-3`,
+        className: `oche-match__actions mt-8 flex flex-wrap gap-3`,
         children: [
           !T &&
             !D &&

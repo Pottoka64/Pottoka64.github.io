@@ -155,7 +155,7 @@ function m({ tournament: e }) {
       g(!1), r ? m(``) : v(`Rôle refusé. Vérifie le code marqueur.`);
     };
   return (0, f.jsxs)(`div`, {
-    className: `surface-card card-cream relative overflow-hidden px-4 py-5`,
+    className: `oche-club-edge surface-card card-cream relative overflow-hidden px-4 py-5`,
     children: [
       (0, f.jsx)(`div`, {
         className: `stripe-board pointer-events-none absolute inset-x-0 top-0`,
@@ -183,7 +183,7 @@ function m({ tournament: e }) {
                 ],
               }),
               (0, f.jsx)(`p`, {
-                className: `mt-1 font-display text-5xl font-semibold tracking-[0.18em] text-board-red`,
+                className: `oche-share-code`,
                 children: y,
               }),
               (0, f.jsx)(`p`, {
@@ -209,7 +209,7 @@ function m({ tournament: e }) {
               children: `Code marqueur`,
             }),
             (0, f.jsx)(`p`, {
-              className: `mt-1 font-display text-3xl font-semibold tracking-[0.2em] text-accent-fg`,
+              className: `oche-share-host mt-1 font-display text-3xl font-semibold tracking-[0.2em] text-accent-fg`,
               children: x,
             }),
             (0, f.jsx)(`p`, {

@@ -91,7 +91,7 @@ var S = e();
 function C() {
   let e = x();
   return (0, S.jsxs)(`main`, {
-    className: `mx-auto max-w-3xl px-4 py-8`,
+    className: `oche-page mx-auto max-w-3xl px-4 py-8`,
     children: [
       (0, S.jsx)(`p`, { className: `stamp stamp-red`, children: `Sortie en double` }),
       (0, S.jsx)(`h1`, {

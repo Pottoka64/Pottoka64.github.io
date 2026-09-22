@@ -206,7 +206,7 @@ function b() {
         O((t) => (t.includes(e) ? t.filter((t) => t !== e) : [...t, e]));
     };
   return (0, g.jsxs)(`main`, {
-    className: `mx-auto max-w-3xl px-4 py-8`,
+    className: `oche-page mx-auto max-w-3xl px-4 py-8`,
     children: [
       (0, g.jsx)(`h1`, {
         className: `font-display text-4xl font-semibold tracking-tight text-board-cream`,

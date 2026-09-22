@@ -2580,3 +2580,341 @@
 .oche-fx__badge--done {
   color: color-mix(in oklab, var(--color-board-green) 75%, var(--color-muted));
 }
+
+/* ===== OCHE design polish — stadium board (2026-09) ===== */
+
+/* Shorter stamps / badges */
+.stamp {
+  padding: 0.12rem 0.4rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.14em;
+}
+.oche-fx__badge {
+  margin-top: 0.15rem;
+  font-size: 0.68rem;
+  letter-spacing: 0.06em;
+}
+
+/* Stronger play-vs-done on bracket cards */
+.oche-fx--play {
+  border-color: var(--color-board-cream);
+  background-color: color-mix(in oklab, var(--color-board-green) 36%, transparent);
+  box-shadow: var(--shadow-stamp-cream);
+}
+.oche-fx--play:hover {
+  background-color: color-mix(in oklab, var(--color-board-green) 52%, transparent);
+}
+.oche-fx--done {
+  border-color: color-mix(in oklab, var(--color-board-green) 28%, transparent);
+  background-color: color-mix(in oklab, var(--color-board-cream) 5%, transparent);
+  opacity: 0.58;
+}
+.oche-fx--wait {
+  opacity: 0.7;
+}
+
+/* Subtle danger tint (errors only — no new bust logic) */
+.text-danger {
+  color: color-mix(in oklab, var(--color-danger) 92%, var(--color-board-cream));
+  text-shadow: 0 0 18px color-mix(in oklab, var(--color-danger) 28%, transparent);
+}
+
+/* Club polish: cream/green edge accents on cards */
+.surface-card {
+  border-image: none;
+  position: relative;
+}
+.oche-club-edge {
+  box-shadow:
+    var(--shadow-stamp),
+    inset 0 0 0 1px color-mix(in oklab, var(--color-board-cream) 18%, transparent);
+}
+.oche-club-edge::before {
+  content: "";
+  pointer-events: none;
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    color-mix(in oklab, var(--color-board-cream) 12%, transparent) 0%,
+    transparent 42%,
+    color-mix(in oklab, var(--color-board-green) 10%, transparent) 100%
+  );
+  opacity: 0.55;
+}
+
+/* ----- Home hierarchy ----- */
+.oche-home__cta {
+  gap: 0.85rem;
+}
+.oche-home__cta > a,
+.oche-home__cta > button,
+.oche-home__cta .inline-flex {
+  min-height: 3.25rem;
+  padding-inline: 1.35rem;
+  font-size: 1.05rem;
+  font-weight: 600;
+}
+.oche-home__join {
+  margin-top: 2rem;
+  box-shadow:
+    var(--shadow-stamp),
+    0 0 0 1px color-mix(in oklab, var(--color-board-red) 25%, transparent);
+}
+.oche-home__links {
+  margin-top: 3.5rem;
+  gap: 1.35rem;
+  opacity: 0.88;
+}
+.oche-home__links > a {
+  padding: 1rem 1.1rem;
+  box-shadow: var(--shadow-border);
+  transform: none;
+}
+@media (hover: hover) {
+  .oche-home__links > a:hover {
+    box-shadow: var(--shadow-border-hover);
+    transform: translate(-1px, -1px);
+  }
+}
+.oche-home__links .stamp {
+  transform: rotate(-2deg);
+  opacity: 0.9;
+}
+.oche-home__links .font-display.text-3xl {
+  font-size: 1.55rem;
+}
+.oche-home__history {
+  margin-top: 2.75rem;
+  opacity: 0.82;
+}
+.oche-home__history h2 {
+  font-size: 1.65rem;
+}
+
+/* ----- Match stadium board ----- */
+.oche-match {
+  max-width: 36rem;
+  padding-top: 1.25rem;
+  padding-bottom: 2rem;
+}
+.oche-match__chrome {
+  opacity: 0.72;
+  letter-spacing: 0.16em;
+}
+.oche-match__title {
+  margin-top: 0.35rem;
+  font-size: clamp(2.25rem, 8vw, 3.25rem);
+  line-height: 0.9;
+  letter-spacing: -0.02em;
+}
+.oche-match__meta {
+  margin-top: 0.5rem;
+  font-size: 0.95rem;
+}
+.oche-match__board {
+  margin-top: 1.75rem;
+  gap: 0.85rem;
+  padding: 0.65rem;
+  border-radius: var(--radius-xl);
+  border: 2px solid color-mix(in oklab, var(--color-board-cream) 35%, transparent);
+  background:
+    linear-gradient(
+      180deg,
+      color-mix(in oklab, var(--color-board-green) 14%, transparent),
+      color-mix(in oklab, var(--color-inset) 70%, transparent)
+    );
+  box-shadow:
+    var(--shadow-stamp-ink),
+    inset 0 0 0 1px color-mix(in oklab, var(--color-board-cream) 12%, transparent);
+}
+.oche-match__player {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 1rem 1.1rem;
+  border-radius: var(--radius-lg);
+  border: 2px solid transparent;
+  background: color-mix(in oklab, var(--color-surface) 88%, transparent);
+  box-shadow: var(--shadow-border);
+  transition: border-color 0.15s ease, background-color 0.15s ease, box-shadow 0.15s ease;
+}
+.oche-match__player--lead {
+  border-color: color-mix(in oklab, var(--color-board-cream) 55%, transparent);
+  background: color-mix(in oklab, var(--color-board-green) 22%, var(--color-surface));
+  box-shadow: var(--shadow-stamp-cream);
+}
+.oche-match__player--winner {
+  border-color: var(--color-inset);
+  background: var(--color-board-red);
+  color: var(--color-fg);
+  box-shadow: var(--shadow-stamp-cream);
+}
+.oche-match__name {
+  font-family: var(--font-display);
+  font-size: clamp(1.35rem, 5vw, 1.85rem);
+  font-weight: 600;
+  letter-spacing: -0.01em;
+  line-height: 1.05;
+}
+.oche-match__score {
+  font-family: var(--font-display);
+  font-size: clamp(3.25rem, 14vw, 4.75rem);
+  font-weight: 600;
+  line-height: 0.85;
+  font-variant-numeric: tabular-nums;
+  letter-spacing: -0.03em;
+  color: var(--color-board-cream);
+}
+.oche-match__player--winner .oche-match__score {
+  color: var(--color-fg);
+}
+.oche-match__actions {
+  margin-top: 1.75rem;
+  gap: 0.75rem;
+}
+.oche-match__actions > a,
+.oche-match__actions > button {
+  min-height: 3.1rem;
+}
+
+/* Plus / Moins — larger tap targets */
+.oche-stepper {
+  display: flex;
+  align-items: center;
+  gap: 0.65rem;
+}
+.oche-stepper__btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 3.25rem;
+  height: 3.25rem;
+  min-width: 3.25rem;
+  min-height: 3.25rem;
+  border-radius: var(--radius-md);
+  background: var(--color-raised);
+  color: var(--color-fg);
+  font-size: 1.45rem;
+  font-weight: 600;
+  box-shadow: var(--shadow-border);
+  touch-action: manipulation;
+}
+.oche-stepper__btn:disabled {
+  opacity: 0.4;
+}
+.oche-stepper__value {
+  width: 4.5rem;
+  text-align: center;
+  font-family: var(--font-display);
+  font-size: clamp(2.75rem, 12vw, 4rem);
+  font-weight: 600;
+  line-height: 0.9;
+  font-variant-numeric: tabular-nums;
+  color: var(--color-board-cream);
+}
+
+/* Landscape-friendly match board */
+@media (orientation: landscape) and (max-height: 520px) {
+  .oche-match {
+    max-width: 56rem;
+    padding-top: 0.5rem;
+    padding-bottom: 0.75rem;
+  }
+  .oche-match__title {
+    font-size: 1.75rem;
+  }
+  .oche-match__board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    margin-top: 0.75rem;
+    padding: 0.4rem;
+  }
+  .oche-match__player {
+    padding: 0.65rem 0.85rem;
+  }
+  .oche-match__score,
+  .oche-stepper__value {
+    font-size: 2.75rem;
+  }
+  .oche-match__actions {
+    margin-top: 0.75rem;
+  }
+}
+@media (orientation: landscape) and (min-width: 900px) and (min-height: 521px) {
+  .oche-match {
+    max-width: 48rem;
+  }
+  .oche-match__board {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+  }
+}
+
+/* ----- Page density (tournoi / checkouts / règles) ----- */
+.oche-page {
+  padding-top: 2rem;
+  padding-bottom: 2.5rem;
+}
+.oche-page .surface-card {
+  margin-top: 1.35rem;
+}
+.oche-page .mt-6 {
+  margin-top: 1.75rem;
+}
+.oche-page .mt-8 {
+  margin-top: 2.15rem;
+}
+.oche-page .space-y-6 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 1.85rem;
+}
+.oche-page .space-y-14 > :not([hidden]) ~ :not([hidden]) {
+  margin-top: 4rem;
+}
+.oche-page .gap-3 {
+  gap: 1rem;
+}
+.oche-page .gap-2 {
+  gap: 0.75rem;
+}
+
+/* Share salon code presentation */
+.oche-share-code {
+  display: inline-block;
+  margin-top: 0.35rem;
+  padding: 0.35rem 0.7rem 0.45rem;
+  border-radius: var(--radius-md);
+  border: 2px solid color-mix(in oklab, var(--color-board-red) 55%, transparent);
+  background: color-mix(in oklab, var(--color-board-cream) 18%, transparent);
+  font-family: var(--font-display);
+  font-size: clamp(2.4rem, 9vw, 3.15rem);
+  font-weight: 600;
+  letter-spacing: 0.22em;
+  line-height: 1;
+  color: var(--color-board-red);
+  box-shadow: inset 0 -3px 0 color-mix(in oklab, var(--color-board-red) 22%, transparent);
+}
+.oche-share-host {
+  letter-spacing: 0.18em;
+  padding: 0.2rem 0.45rem;
+  border-radius: var(--radius-sm);
+  background: color-mix(in oklab, var(--color-inset) 35%, transparent);
+}
+
+/* Primary mobile tap targets */
+@media (max-width: 640px) {
+  .oche-home__cta > a,
+  .oche-home__cta > button,
+  .oche-home__cta .inline-flex {
+    width: 100%;
+    min-height: 3.4rem;
+  }
+  .oche-stepper__btn {
+    width: 3.5rem;
+    height: 3.5rem;
+    min-width: 3.5rem;
+    min-height: 3.5rem;
+  }
+}

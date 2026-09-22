@@ -129,7 +129,7 @@ function y() {
     g = s.filter((e) => e.status === `running`).slice(0, 3),
     _ = s.filter((e) => e.status === `complete`).slice(0, 3);
   return (0, p.jsxs)(`main`, {
-    className: `relative mx-auto max-w-6xl overflow-x-hidden px-4 pb-10 pt-8 sm:pt-12`,
+    className: `oche-home relative mx-auto max-w-6xl overflow-x-hidden px-4 pb-10 pt-8 sm:pt-12`,
     children: [
       (0, p.jsxs)(`div`, {
         className: `grid items-center gap-10 lg:grid-cols-[1.15fr_0.85fr]`,
@@ -168,7 +168,7 @@ function y() {
                 children: `Marquez un 501, ouvrez un tableau, partagez le code. Toute la bande voit le même score — comme au club, sans le carnet graisseux.`,
               }),
               (0, p.jsxs)(`div`, {
-                className: `reveal reveal-4 relative mt-8 flex flex-wrap gap-3`,
+                className: `oche-home__cta reveal reveal-4 relative mt-8 flex flex-wrap gap-3`,
                 children: [
                   (0, p.jsx)(c, {
                     size: `lg`,
@@ -193,7 +193,7 @@ function y() {
                 ],
               }),
               (0, p.jsxs)(`div`, {
-                className: `reveal reveal-4 relative mt-8 max-w-md p-4 surface-card card-cream`,
+                className: `oche-home__join reveal reveal-4 relative mt-8 max-w-md p-4 surface-card card-cream oche-club-edge`,
                 children: [
                   (0, p.jsx)(`p`, {
                     className: `stamp stamp-red`,
@@ -221,7 +221,7 @@ function y() {
         ],
       }),
       (0, p.jsx)(`div`, {
-        className: `mt-16 grid gap-5 sm:grid-cols-3`,
+        className: `oche-home__links mt-16 grid gap-5 sm:grid-cols-3`,
         children: [
           {
             to: `/regles`,
@@ -282,7 +282,7 @@ function y() {
       }),
       g.length > 0 &&
         (0, p.jsxs)(`section`, {
-          className: `mt-16`,
+          className: `oche-home__history mt-16`,
           children: [
             (0, p.jsxs)(`h2`, {
               className: `flex items-center gap-3 font-display text-3xl font-semibold text-board-cream`,
@@ -326,7 +326,7 @@ function y() {
         }),
       _.length > 0 &&
         (0, p.jsxs)(`section`, {
-          className: `mt-16`,
+          className: `oche-home__history mt-16`,
           children: [
             (0, p.jsx)(`h2`, {
               className: `font-display text-3xl font-semibold text-board-cream`,
@@ -363,7 +363,7 @@ function y() {
           ],
         }),
       (0, p.jsxs)(`section`, {
-        className: `mt-16`,
+        className: `oche-home__history mt-16`,
         children: [
           (0, p.jsxs)(`div`, {
             className: `flex items-baseline justify-between`,
