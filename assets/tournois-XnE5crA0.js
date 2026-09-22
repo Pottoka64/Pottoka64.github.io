@@ -427,7 +427,7 @@ function b() {
           (0, g.jsxs)(`label`, {
             className: `flex flex-col gap-2 text-sm text-muted`,
             children: [
-              `Manches (best of)`,
+              `Manches (au meilleur des)`,
               (0, g.jsx)(`select`, {
                 value: k,
                 onChange: (e) => A(Number(e.target.value)),
@@ -435,7 +435,7 @@ function b() {
                 children: [1, 3, 5, 7, 9, 11].map((e) =>
                   (0, g.jsxs)(
                     `option`,
-                    { value: e, children: [`Best of `, e] },
+                    { value: e, children: [`Au meilleur des `, e] },
                     e,
                   ),
                 ),
@@ -455,7 +455,7 @@ function b() {
                     `option`,
                     {
                       value: e,
-                      children: e === 0 ? `Manches seules` : `First to ${e}`,
+                      children: e === 0 ? `Manches seules` : `Premier à ${e}`,
                     },
                     e,
                   ),

@@ -93,10 +93,10 @@ function C() {
   return (0, S.jsxs)(`main`, {
     className: `mx-auto max-w-3xl px-4 py-8`,
     children: [
-      (0, S.jsx)(`p`, { className: `stamp stamp-red`, children: `Double out` }),
+      (0, S.jsx)(`p`, { className: `stamp stamp-red`, children: `Sortie en double` }),
       (0, S.jsx)(`h1`, {
         className: `mt-4 font-display text-4xl font-semibold tracking-tight text-board-cream`,
-        children: `Checkouts`,
+        children: `Sorties`,
       }),
       (0, S.jsxs)(`p`, {
         className: `mt-3 text-muted`,
@@ -126,7 +126,7 @@ function C() {
                   }),
                   (0, S.jsx)(`th`, {
                     className: `px-4 py-3 font-medium`,
-                    children: `Route`,
+                    children: `Trajectoire`,
                   }),
                 ],
               }),

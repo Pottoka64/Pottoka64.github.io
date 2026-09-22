@@ -126,3 +126,22 @@ Probe live sans contexte Build Mode → **403 Forbidden**. Ces handlers **ne son
 3. Script `grok.com/grok-app-builder/extensions.js` retiré pour le local.
 4. Manifest `__grok/manifest.webmanifest` était en **404** sur le live — non récupéré.
 5. Pour un vrai fork maintenable : réécrire au-dessus de ces bundles, ou re-générer un app TanStack Start + réimplémenter les 6 server functions (DB salon).
+
+## Done — homogénéisation UI FR (2026-09-22)
+
+Pass UI-facing applied on bundled assets (string literals only):
+
+| Old | New | Files |
+|---|---|---|
+| `Live` (stamp accueil) | `En direct` | `routes-CBx5FAnF.js`, `index.html` |
+| `Manches (best of)` | `Manches (au meilleur des)` | `jouer-CGEhcuTd.js`, `tournois-XnE5crA0.js` |
+| `Best of N` (options) | `Au meilleur des N` | idem |
+| `First to …` | `Premier à …` | `jouer`, `tournois`, `match._matchId` |
+| `Sets (0 = manches seules)` | `Sets (0 = manches uniquement)` | `jouer-CGEhcuTd.js` |
+| stamp `Double out` / h1 `Checkouts` / th `Route` | `Sortie en double` / `Sorties` / `Trajectoire` | `checkouts-Ct96LySl.js` |
+| `Table de checkouts` | `Table des sorties` | `regles-CmQFYbOL.js` |
+| `Soft-tip exclu.` | `Fléchettes soft-tip exclues.` | `regles-CmQFYbOL.js` |
+| `byes` / `Byes` (FR prose) | `byes (exemptions)` / `Byes (exemptions)` | `formats-M2QI3UJX.js`, `regles` |
+| join / salle error copy | `Ce salon n’existe pas ou a été fermé. Vérifie le code et réessaie.` (input not cleared) | `join-form-plRLSa1H.js`, `salle._code-C9D-378V.js` |
+
+**Left intentional EN:** format card names (`501 double out`, Cricket, Shanghai, Killer…); règles glossaire (`Best of 5 = first to 3…`, `double out` in body copy); code prop `route` / CSS `live-dot`.

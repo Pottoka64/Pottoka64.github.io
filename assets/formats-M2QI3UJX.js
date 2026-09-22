@@ -453,7 +453,7 @@ var e = [
     {
       id: `single`,
       name: `Élimination directe`,
-      summary: `Tableau à simple élimination, byes automatiques jusqu’à la puissance de 2.`,
+      summary: `Tableau à simple élimination, byes (exemptions) automatiques jusqu’à la puissance de 2.`,
     },
     {
       id: `double`,

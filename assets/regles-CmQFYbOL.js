@@ -132,7 +132,7 @@ var r = [
         `Un tournoi n’est qu’une armature autour des matchs. Les fédérations mélangent souvent poules et tableau. La PDC Premier League est un championnat + playoffs. Les Opens WDF sont à élimination directe après un éventuel round robin d’entrée.`,
       ],
       bullets: [
-        `Élimination directe : un match, un perdant sort. Byes jusqu’à la puissance de 2. Petite finale optionnelle.`,
+        `Élimination directe : un match, un perdant sort. Byes (exemptions) jusqu’à la puissance de 2. Petite finale optionnelle.`,
         `Double élimination : une défaite envoie dans le tableau des perdants ; deux défaites et c’est fini. Grande finale entre les deux survivants.`,
         `Toutes rondes : chacun joue chacun. Classement aux victoires.`,
         `Poules + tableau : groupes en toutes rondes, qualifiés en élimination directe.`,
@@ -270,7 +270,7 @@ function o() {
       }),
       (0, i.jsx)(`p`, {
         className: `mt-3 text-muted`,
-        children: `Distances WDF / DRA / PDC, formats de jeu et vocabulaire de salle. Soft-tip exclu.`,
+        children: `Distances WDF / DRA / PDC, formats de jeu et vocabulaire de salle. Fléchettes soft-tip exclues.`,
       }),
       (0, i.jsxs)(`nav`, {
         className: `mt-8 flex flex-wrap gap-2`,
@@ -289,7 +289,7 @@ function o() {
           (0, i.jsx)(t, {
             to: `/checkouts`,
             className: `h-10 rounded-full bg-board-green px-3 text-sm leading-10 text-fg shadow-[var(--shadow-stamp-cream)]`,
-            children: `Table de checkouts`,
+            children: `Table des sorties`,
           }),
         ],
       }),

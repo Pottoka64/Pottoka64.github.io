@@ -89,7 +89,7 @@ function S({ match: e }) {
       (0, v.jsxs)(`p`, {
         className: `mt-2 text-muted`,
         children: [
-          `First to `,
+          `Premier à `,
           w,
           ` `,
           C,

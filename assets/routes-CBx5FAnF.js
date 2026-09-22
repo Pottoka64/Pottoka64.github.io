@@ -151,7 +151,7 @@ function y() {
                 children: [
                   (0, p.jsx)(`span`, {
                     className: `stamp stamp-red`,
-                    children: `Live`,
+                    children: `En direct`,
                   }),
                   (0, p.jsx)(`span`, {
                     className: `stamp stamp-green`,

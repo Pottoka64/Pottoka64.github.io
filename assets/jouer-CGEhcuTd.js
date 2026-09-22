@@ -113,7 +113,7 @@ function d() {
             children: [
               (0, u.jsx)(`span`, {
                 className: `text-sm text-muted`,
-                children: `Manches (best of)`,
+                children: `Manches (au meilleur des)`,
               }),
               (0, u.jsx)(`select`, {
                 value: g,
@@ -122,7 +122,7 @@ function d() {
                 children: [1, 3, 5, 7, 9, 11, 13].map((e) =>
                   (0, u.jsxs)(
                     `option`,
-                    { value: e, children: [`Best of `, e] },
+                    { value: e, children: [`Au meilleur des `, e] },
                     e,
                   ),
                 ),
@@ -134,7 +134,7 @@ function d() {
             children: [
               (0, u.jsx)(`span`, {
                 className: `text-sm text-muted`,
-                children: `Sets (0 = manches seules)`,
+                children: `Sets (0 = manches uniquement)`,
               }),
               (0, u.jsx)(`select`, {
                 value: v,
@@ -148,7 +148,7 @@ function d() {
                       children:
                         e === 0
                           ? `Pas de sets`
-                          : `First to ${e} set${e > 1 ? `s` : ``}`,
+                          : `Premier à ${e} set${e > 1 ? `s` : ``}`,
                     },
                     e,
                   ),

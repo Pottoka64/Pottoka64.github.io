@@ -20,7 +20,7 @@ function c() {
       f(!0), u(null);
       let i = await e(r);
       if ((f(!1), !i)) {
-        u(`Ce salon n’existe pas, ou il a été fermé.`);
+        u(`Ce salon n’existe pas ou a été fermé. Vérifie le code et réessaie.`);
         return;
       }
       t({ to: `/tournoi/$tournoiId`, params: { tournoiId: i } });

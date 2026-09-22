@@ -22,7 +22,7 @@ function u() {
           r ||
             (n
               ? u({ to: `/tournoi/$tournoiId`, params: { tournoiId: n } })
-              : f(`Salon introuvable ou fermé. Vérifiez le code.`));
+              : f(`Ce salon n’existe pas ou a été fermé. Vérifie le code et réessaie.`));
         })(),
         () => {
           r = !0;
