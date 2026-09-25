@@ -3,27 +3,27 @@ const __vite__mapDeps = (
   m = __vite__mapDeps,
   d = m.f ||
     (m.f = [
-      "assets/routes-CBx5FAnF.js",
+      "assets/routes-oche-v3.js",
       "assets/jsx-runtime-BkSabwWG.js",
-      "assets/store-QFDO1GxK.js",
+      "assets/store-oche-v3.js",
       "assets/useRouter-B1ejQzOU.js",
       "assets/types-UrLSRqj_.js",
       "assets/link-BA5v6P_F.js",
-      "assets/button-DVevz7Ul.js",
-      "assets/join-form-plRLSa1H.js",
+      "assets/button-oche-v3.js",
+      "assets/join-form-oche-v3.js",
       "assets/formats-M2QI3UJX.js",
       "assets/checkouts-Ct96LySl.js",
-      "assets/jouer-CGEhcuTd.js",
-      "assets/format-picker-C4agIy6f.js",
-      "assets/joueurs-Bgj0OGlR.js",
-      "assets/score-table-DYx8e5aU.js",
+      "assets/jouer-oche-v3.js",
+      "assets/format-picker-oche-v3.js",
+      "assets/joueurs-oche-v3.js",
+      "assets/score-table-oche-v3.js",
       "assets/regles-CmQFYbOL.js",
-      "assets/tournois-oche-v2.js",
-      "assets/match._matchId-Do_d-xK5.js",
-      "assets/salle._code-C9D-378V.js",
-      "assets/tournoi._tournoiId-oche-v2.js",
-      "assets/use-share-sync-BgXH6cta.js",
-      "assets/tournoi_._tournoiId.finale-BGrXupdd.js",
+      "assets/tournois-oche-v3.js",
+      "assets/match._matchId-oche-v3.js",
+      "assets/salle._code-oche-v3.js",
+      "assets/tournoi._tournoiId-oche-v3.js",
+      "assets/use-share-sync-oche-v3.js",
+      "assets/tournoi_._tournoiId.finale-oche-v3.js",
     ]),
 ) => i.map((i) => d[i]);
 import { n as e, r as t, t as n } from "./jsx-runtime-BkSabwWG.js";
@@ -58,7 +58,7 @@ import {
   k as ae,
   t as oe,
   w as se,
-} from "./store-QFDO1GxK.js";
+} from "./store-oche-v3.js";
 import {
   _ as ce,
   a as le,
@@ -21261,7 +21261,7 @@ var Gd = `/assets/styles-oche-v2.css`,
     component: hr(
       () =>
         Zd(
-          () => import(`./routes-CBx5FAnF.js`),
+          () => import(`./routes-oche-v3.js`),
           __vite__mapDeps([0, 1, 2, 3, 4, 5, 6, 7, 8]),
         ),
       `component`,
@@ -21278,7 +21278,7 @@ var Gd = `/assets/styles-oche-v2.css`,
     component: hr(
       () =>
         Zd(
-          () => import(`./jouer-CGEhcuTd.js`),
+          () => import(`./jouer-oche-v3.js`),
           __vite__mapDeps([10, 1, 3, 2, 4, 6, 8, 11]),
         ),
       `component`,
@@ -21288,7 +21288,7 @@ var Gd = `/assets/styles-oche-v2.css`,
     component: hr(
       () =>
         Zd(
-          () => import(`./joueurs-Bgj0OGlR.js`),
+          () => import(`./joueurs-oche-v3.js`),
           __vite__mapDeps([12, 1, 3, 2, 4, 5, 6, 13]),
         ),
       `component`,
@@ -21308,7 +21308,7 @@ var Gd = `/assets/styles-oche-v2.css`,
     component: hr(
       () =>
         Zd(
-          () => import(`./tournois-oche-v2.js`),
+          () => import(`./tournois-oche-v3.js`),
           __vite__mapDeps([15, 1, 3, 2, 4, 5, 6, 7, 8, 11]),
         ),
       `component`,
@@ -21318,7 +21318,7 @@ var Gd = `/assets/styles-oche-v2.css`,
     component: hr(
       () =>
         Zd(
-          () => import(`./match._matchId-Do_d-xK5.js`),
+          () => import(`./match._matchId-oche-v3.js`),
           __vite__mapDeps([16, 1, 3, 2, 4, 5, 6]),
         ),
       `component`,
@@ -21328,7 +21328,7 @@ var Gd = `/assets/styles-oche-v2.css`,
     component: hr(
       () =>
         Zd(
-          () => import(`./salle._code-C9D-378V.js`),
+          () => import(`./salle._code-oche-v3.js`),
           __vite__mapDeps([17, 1, 3, 2, 4, 5, 6]),
         ),
       `component`,
@@ -21338,7 +21338,7 @@ var Gd = `/assets/styles-oche-v2.css`,
     component: hr(
       () =>
         Zd(
-          () => import(`./tournoi._tournoiId-oche-v2.js`),
+          () => import(`./tournoi._tournoiId-oche-v3.js`),
           __vite__mapDeps([18, 1, 2, 3, 4, 5, 6, 8, 13, 19]),
         ),
       `component`,
@@ -21348,7 +21348,7 @@ var Gd = `/assets/styles-oche-v2.css`,
     component: hr(
       () =>
         Zd(
-          () => import(`./tournoi_._tournoiId.finale-BGrXupdd.js`),
+          () => import(`./tournoi_._tournoiId.finale-oche-v3.js`),
           __vite__mapDeps([20, 1, 2, 3, 4, 5, 6, 8, 13, 19]),
         ),
       `component`,

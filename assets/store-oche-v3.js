@@ -4084,7 +4084,15 @@ function Va(e, t) {
         i = n.getItem(e) ?? null;
       return i instanceof Promise ? i.then(r) : r(i);
     },
-    setItem: (e, r) => n.setItem(e, JSON.stringify(r, t?.replacer)),
+    // Quota plein / stockage indisponible : on garde l'état en mémoire au lieu
+    // de faire échouer l'action (ex. rejoindre un salon) sur une exception.
+    setItem: (e, r) => {
+      try {
+        return n.setItem(e, JSON.stringify(r, t?.replacer));
+      } catch (err) {
+        console.warn(`[OCHE] Sauvegarde locale impossible`, err);
+      }
+    },
     removeItem: (e) => n.removeItem(e),
   };
 }
@@ -4394,7 +4402,7 @@ function to(e, t) {
 function no(e, t) {
   if (to(e, t)) return e;
   let n = e.playerIds.reduce((e, n) => ((t[n] ?? 0) > (t[e] ?? 0) ? n : e)),
-    r = structuredClone(e);
+    r = __ocheClone(e);
   return (
     (r.status = `complete`),
     (r.winnerId = n),
@@ -4974,10 +4982,16 @@ function Ao(e, t) {
   }
   return n;
 }
+function __ocheClone(e) {
+  return typeof structuredClone == `function`
+    ? structuredClone(e)
+    : JSON.parse(JSON.stringify(e));
+}
 function jo(e, t) {
-  let n = structuredClone(e.tournament);
+  let n = __ocheClone(e.tournament);
+  Array.isArray(n.fixtures) || (n.fixtures = []);
   t.tournament.shareCode && (n.shareCode = t.tournament.shareCode);
-  for (let e of t.tournament.fixtures) {
+  for (let e of t.tournament.fixtures ?? []) {
     let t = n.fixtures.find((t) => t.id === e.id);
     e.winnerId &&
       t &&
@@ -4987,10 +5001,11 @@ function jo(e, t) {
         b: e.scoreB ?? 0,
       }));
   }
-  let r = new Map(e.players.map((e) => [e.id, e]));
-  for (let e of t.players) r.has(e.id) || r.set(e.id, e);
-  let i = new Map(e.matches.map((e) => [e.id, e]));
-  for (let e of t.matches) {
+  let r = new Map((e.players ?? []).filter(Boolean).map((e) => [e.id, e]));
+  for (let e of t.players ?? []) e && !r.has(e.id) && r.set(e.id, e);
+  let i = new Map((e.matches ?? []).filter(Boolean).map((e) => [e.id, e]));
+  for (let e of t.matches ?? []) {
+    if (!e) continue;
     let t = i.get(e.id);
     (!t || (e.status === `complete` && t.status !== `complete`)) &&
       i.set(e.id, e);
@@ -5013,6 +5028,24 @@ function Po(e) {
 }
 function Fo(e) {
   return /^[A-HJ-NP-Z2-9]{6}$/.test(e);
+}
+/** Code salon saisi/collé → forme canonique (« abc-def », « ABC DEF », pleine chasse, espaces insécables/zéro-largeur…). */
+function __ocheNormCode(e) {
+  let t = String(e ?? ``);
+  try {
+    t = t.normalize(`NFKC`);
+  } catch {}
+  return t.toUpperCase().replace(/[^A-Z0-9]/g, ``);
+}
+var __ocheJoinMessages = {
+  invalid: `Code invalide : 6 caractères, sans O, 0, I ni 1.`,
+  not_found: `Aucun salon avec ce code. Vérifie avec l’hôte.`,
+  closed: `Ce salon a été fermé par l’hôte.`,
+  network: `Connexion impossible au serveur. Vérifie ta connexion et réessaie.`,
+  load: `Le salon existe mais n’a pas pu être chargé. Recharge la page et réessaie.`,
+};
+function __ocheJoinFail(e) {
+  return { ok: !1, reason: e, message: __ocheJoinMessages[e] };
 }
 function Io(e) {
   return e !== `__proto__` && e !== `constructor` && e !== `prototype`;
@@ -5373,7 +5406,7 @@ var ts = Ba()(
       snapshotOf: (e) => {
         let n = t().tournaments.find((t) => t.id === e);
         if (!n) return null;
-        let r = new Set(n.playerIds);
+        let r = new Set(n.playerIds ?? []);
         return {
           tournament: No(n),
           players: t().players.filter((e) => r.has(e.id)),
@@ -5386,13 +5419,20 @@ var ts = Ba()(
           o = t().tournaments.find((e) => e.id === n.tournament.id),
           s = {
             ...a.tournament,
+            fixtures: Array.isArray(a.tournament.fixtures)
+              ? a.tournament.fixtures
+              : [],
+            playerIds: Array.isArray(a.tournament.playerIds)
+              ? a.tournament.playerIds
+              : [],
             shareVersion: r,
             shareCode: n.tournament.shareCode ?? a.tournament.shareCode,
             hostSecret: o?.hostSecret,
           },
           c = [...t().players];
-        for (let e of a.players) c.some((t) => t.id === e.id) || c.push(e);
-        let l = new Set(a.matches.map((e) => e.id)),
+        for (let e of a.players ?? [])
+          e && e.id && (c.some((t) => t.id === e.id) || c.push(e));
+        let l = new Set((a.matches ?? []).map((e) => e.id)),
           u = t().matches.filter(
             (e) =>
               e.tournamentId === s.id &&
@@ -5402,7 +5442,7 @@ var ts = Ba()(
         e({
           players: c,
           matches: [
-            ...a.matches,
+            ...(a.matches ?? []),
             ...u,
             ...t().matches.filter((e) => e.tournamentId !== s.id),
           ],
@@ -5504,30 +5544,42 @@ var ts = Ba()(
                 });
             } catch {}
         }),
+      // → { ok: true, id, tournamentId, code } | { ok: false, reason, message }
+      // reason ∈ invalid | not_found | closed | network | load
       joinTournament: async (n) => {
+        let a = __ocheNormCode(n);
+        if (!Fo(a)) return __ocheJoinFail(`invalid`);
+        let r;
         try {
-          let r = await Go({ data: { code: n } });
-          if (!r || r.closed || !r.payload) return null;
-          t().ingestSnapshot(r.payload, r.version);
-          let i = r.payload.tournament.id,
-            a = String(n)
-              .trim()
-              .toUpperCase();
+          r = await Go({ data: { code: a } });
+        } catch (err) {
+          console.error(`[OCHE] share_get ${a} :`, err);
+          return __ocheJoinFail(`network`);
+        }
+        if (!r) return __ocheJoinFail(`not_found`);
+        if (r.closed) return __ocheJoinFail(`closed`);
+        let o = r.payload;
+        if (!o || !o.tournament || !o.tournament.id) {
+          console.error(`[OCHE] salon ${a} : payload inexploitable`, o);
+          return __ocheJoinFail(`load`);
+        }
+        try {
+          t().ingestSnapshot(o, r.version);
+          let i = o.tournament.id;
           // Toujours graver le code salon localement : le payload publié
           // n'embarque souvent pas encore shareCode (posé après Wo).
           // Sans ça, la carte Partage / « Devenir marqueur » reste cachée (!b && y).
-          return (
-            e({
-              tournaments: t().tournaments.map((e) =>
-                e.id === i
-                  ? { ...e, shareCode: e.shareCode || a }
-                  : e,
-              ),
-            }),
-            i
-          );
-        } catch {
-          return null;
+          e({
+            tournaments: t().tournaments.map((e) =>
+              e.id === i ? { ...e, shareCode: e.shareCode || a } : e,
+            ),
+          });
+          if (!t().tournaments.some((e) => e.id === i))
+            throw new Error(`tournoi ${i} absent après ingestion`);
+          return { ok: !0, id: i, tournamentId: i, code: a };
+        } catch (err) {
+          console.error(`[OCHE] salon ${a} : chargement impossible`, err);
+          return __ocheJoinFail(`load`);
         }
       },
       claimHost: async (n, r) => {
@@ -5563,6 +5615,8 @@ var ts = Ba()(
   ),
 );
 export {
+  __ocheNormCode as normalizeSalonCode,
+  __ocheJoinMessages as joinSalonMessages,
   h as A,
   fi as C,
   ne as D,

@@ -1,9 +1,9 @@
 import { r as e, t } from "./jsx-runtime-BkSabwWG.js";
 import { v as n } from "./useRouter-B1ejQzOU.js";
-import { t as r } from "./store-QFDO1GxK.js";
+import { t as r, normalizeSalonCode as N } from "./store-oche-v3.js";
 import { t as i } from "./link-BA5v6P_F.js";
-import { o as a, r as o } from "./index-oche-v2.js";
-import { t as s } from "./button-DVevz7Ul.js";
+import { o as a, r as o } from "./index-oche-v3.js";
+import { t as s } from "./button-oche-v3.js";
 var c = e(n()),
   l = t();
 function u() {
@@ -20,9 +20,12 @@ function u() {
         (async () => {
           let n = await t(e);
           r ||
-            (n
-              ? u({ to: `/tournoi/$tournoiId`, params: { tournoiId: n } })
-              : f(`Ce salon n’existe pas ou a été fermé. Vérifie le code et réessaie.`));
+            (n?.ok
+              ? u({ to: `/tournoi/$tournoiId`, params: { tournoiId: n.id } })
+              : f(
+                  n?.message ??
+                    `Connexion impossible au serveur. Vérifie ta connexion et réessaie.`,
+                ));
         })(),
         () => {
           r = !0;
@@ -35,7 +38,7 @@ function u() {
         (0, l.jsx)(`p`, { className: `stamp stamp-green`, children: `Salon` }),
         (0, l.jsx)(`h1`, {
           className: `mt-4 font-display text-4xl font-semibold tracking-[0.16em] text-board-cream`,
-          children: e.toUpperCase(),
+          children: N(e) || String(e ?? ``).toUpperCase(),
         }),
         (0, l.jsx)(`p`, {
           className: `mt-4 text-muted`,

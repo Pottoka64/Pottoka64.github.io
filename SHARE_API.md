@@ -8,14 +8,14 @@ Source of truth in tree:
 | File | Role |
 |---|---|
 | `NOTES.md` | Endpoint hash table (confirmed) |
-| `assets/store-QFDO1GxK.js` | ServerFn stubs `Wo`/`Go`/`Ko`/`qo`/`Jo`/`Yo` + Zustand actions |
-| `assets/use-share-sync-BgXH6cta.js` | Poll loop (`Go` + `qo`) + publish/claim UI |
+| `assets/store-oche-v3.js` | ServerFn stubs `Wo`/`Go`/`Ko`/`qo`/`Jo`/`Yo` + Zustand actions |
+| `assets/use-share-sync-oche-v3.js` | Poll loop (`Go` + `qo`) + publish/claim UI |
 
 ---
 
 ## 1. Exact function names and roles
 
-### Low-level TanStack serverFn stubs (`store-QFDO1GxK.js` ~5172–5188)
+### Low-level TanStack serverFn stubs (`store-oche-v3.js` ~5172–5188)
 
 Created as `$({ method: 'POST' }).handler(H('<sha256>'))`.  
 `H(id)` (~2626) builds a callable that `POST`s to `/_serverFn/<id>` with header `x-tsr-serverFn: true`.
@@ -41,7 +41,7 @@ Created as `$({ method: 'POST' }).handler(H('<sha256>'))`.
 | `snapshotOf(tournamentId)` | (local) | `{ tournament: No(t), players, matches }` — **strips `hostSecret`** from tournament before wire |
 | `ingestSnapshot(snapshot, version)` | (local) | Merge players/matches; keep **local** `hostSecret`; set `shareVersion` / `shareCode` |
 
-### UI / sync hook (`use-share-sync-BgXH6cta.js`)
+### UI / sync hook (`use-share-sync-oche-v3.js`)
 
 | Export | Uses | Does |
 |---|---|---|
@@ -306,7 +306,7 @@ var Wo = $({ method: `POST` }).handler(H(`7f4e3f03…eed97`)),
 
 | Alias | Call site | File:line (approx.) |
 |---|---|---|
-| `Wo` | `publishTournament` | `store-QFDO1GxK.js` ~5402 |
+| `Wo` | `publishTournament` | `store-oche-v3.js` ~5402 |
 | `Go` | `joinTournament` | `store` ~5482 |
 | `Go` | poll in `h` — import `r as s` | `use-share-sync` ~286 (`s({ data: { code: u } })`) |
 | `Ko` | `pushTournament` (×1–2) | `store` ~5433, ~5459 |
@@ -325,15 +325,15 @@ Mo as a, Fo as i, Ao as o, …
 ```
 
 ```js
-// use-share-sync-BgXH6cta.js
-import { a as r, i, n as a, o, r as s, t as c } from "./store-QFDO1GxK.js";
+// use-share-sync-oche-v3.js
+import { a as r, i, n as a, o, r as s, t as c } from "./store-oche-v3.js";
 // r=Mo, i=Fo, a=qo, o=Ao, s=Go, c=store
 ```
 
 Join UI does **not** call `Go` directly — only `store.joinTournament`:
 
-- `join-form-plRLSa1H.js` → `joinTournament`
-- `salle._code-C9D-378V.js` → `joinTournament`
+- `join-form-oche-v3.js` → `joinTournament`
+- `salle._code-oche-v3.js` → `joinTournament`
 
 ---
 
@@ -371,13 +371,13 @@ Config via globals or import.meta / hardcoded at top:
 
 ### 4.2 Smallest surgical edits
 
-**A. `store-QFDO1GxK.js` — replace stub definitions only (~5172–5188)**
+**A. `store-oche-v3.js` — replace stub definitions only (~5172–5188)**
 
 Replace the six `$({ method:'POST' }).handler(H(...))` lines with imports from `./share-backend.js` (or assign adapters). Keep names `Wo`, `Go`, `Ko`, `qo`, `Jo`, `Yo` and the same exports (`Go as r`, `qo as n`, …).
 
 Do **not** rewrite `publishTournament` / `pushTournament` / `joinTournament` / `closeTournament` / `claimHost` if adapters accept `{ data }` and return the same result shapes.
 
-**B. `use-share-sync-BgXH6cta.js` — ideally zero edits**
+**B. `use-share-sync-oche-v3.js` — ideally zero edits**
 
 It already imports `Go`/`qo` via store re-exports. If store still exports them, poll keeps working.
 

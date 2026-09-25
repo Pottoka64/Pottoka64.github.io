@@ -1,8 +1,8 @@
 import { r as e, t } from "./jsx-runtime-BkSabwWG.js";
 import { v as n } from "./useRouter-B1ejQzOU.js";
-import { t as r } from "./store-QFDO1GxK.js";
-import { o as i } from "./index-oche-v2.js";
-import { t as a } from "./button-DVevz7Ul.js";
+import { t as r, normalizeSalonCode as N } from "./store-oche-v3.js";
+import { o as i } from "./index-oche-v3.js";
+import { t as a } from "./button-oche-v3.js";
 var o = e(n(), 1),
   s = t();
 function c() {
@@ -12,18 +12,21 @@ function c() {
     [l, u] = (0, o.useState)(null),
     [d, f] = (0, o.useState)(!1),
     p = async () => {
-      let r = n.trim();
+      let r = N(n);
       if (r.length < 4) {
         u(`Il manque le code du salon.`);
         return;
       }
       f(!0), u(null);
       let i = await e(r);
-      if ((f(!1), !i)) {
-        u(`Ce salon n’existe pas ou a été fermé. Vérifie le code et réessaie.`);
+      if ((f(!1), !i?.ok)) {
+        u(
+          i?.message ??
+            `Connexion impossible au serveur. Vérifie ta connexion et réessaie.`,
+        );
         return;
       }
-      t({ to: `/tournoi/$tournoiId`, params: { tournoiId: i } });
+      t({ to: `/tournoi/$tournoiId`, params: { tournoiId: i.id } });
     };
   return (0, s.jsxs)(`div`, {
     children: [

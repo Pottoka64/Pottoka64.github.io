@@ -1,8 +1,16 @@
 import { r as e, t } from "./jsx-runtime-BkSabwWG.js";
 import { v as n } from "./useRouter-B1ejQzOU.js";
-import { a as r, i, n as a, o, r as s, t as c } from "./store-QFDO1GxK.js";
-import { o as l } from "./index-oche-v2.js";
-import { t as u } from "./button-DVevz7Ul.js";
+import {
+  a as r,
+  i,
+  n as a,
+  o,
+  r as s,
+  t as c,
+  normalizeSalonCode as NC,
+} from "./store-oche-v3.js";
+import { o as l } from "./index-oche-v3.js";
+import { t as u } from "./button-oche-v3.js";
 var d = e(n(), 1),
   f = t();
 function p({ tournament: e }) {
@@ -171,12 +179,15 @@ function m({ tournament: e }) {
     },
     P = async (t) => {
       t.preventDefault(), Q(!0), K(null);
-      let n = await J(Y.trim());
-      if ((Q(!1), !n)) {
-        K(`Ce salon n’existe pas ou a été fermé. Vérifie le code et réessaie.`);
+      let n = await J(NC(Y));
+      if ((Q(!1), !n?.ok)) {
+        K(
+          n?.message ??
+            `Connexion impossible au serveur. Vérifie ta connexion et réessaie.`,
+        );
         return;
       }
-      if (n !== e.id) {
+      if (n.id !== e.id) {
         K(`Ce code ouvre un autre tournoi. Utilise le bon code salon.`);
         return;
       }
@@ -247,8 +258,10 @@ function m({ tournament: e }) {
                       placeholder: `Code salon`,
                       autoComplete: `off`,
                       spellCheck: !1,
+                      autoCapitalize: `characters`,
+                      autoCorrect: `off`,
                       className: `field`,
-                      maxLength: 8,
+                      maxLength: 16,
                     }),
                   ],
                 }),
@@ -261,7 +274,7 @@ function m({ tournament: e }) {
                   className: `mt-3`,
                   type: `submit`,
                   variant: `secondary`,
-                  disabled: X || Y.trim().length < 4,
+                  disabled: X || NC(Y).length < 4,
                   children: X ? `Connexion…` : `Lier le salon`,
                 }),
               ],
