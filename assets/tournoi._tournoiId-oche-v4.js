@@ -9,19 +9,20 @@ import {
   t as s,
   u as c,
   x as l,
-} from "./store-oche-v3.js";
+} from "./store-oche-v4.js";
 import { t as u } from "./link-BA5v6P_F.js";
-import { n as d, o as f } from "./index-oche-v3.js";
-import { t as p } from "./button-oche-v3.js";
+import { n as d, o as f } from "./index-oche-v4.js";
+import { t as p } from "./button-oche-v4.js";
 import { n as m } from "./formats-M2QI3UJX.js";
-import { t as h } from "./score-table-oche-v3.js";
-import { n as g, r as _, t as v } from "./use-share-sync-oche-v3.js";
+import { t as h } from "./score-table-oche-v4.js";
+import { n as g, r as _, t as v } from "./use-share-sync-oche-v4.js";
 var y = e();
 function b() {
   let { tournoiId: e } = d.useParams(),
     t = s((t) => t.tournaments.find((t) => t.id === e)),
     b = s((e) => e.players),
     S = s((e) => e.playFixture),
+    OF = s((e) => e.openFixtureMatch),
     C = s((e) => e.reshuffleDraw),
     w = s((e) => e.hydrated),
     T = f();
@@ -51,6 +52,10 @@ function b() {
   let O = (e) => (e ? (E[e] ?? `Joueur`) : `À venir`),
     k = (e) => {
       let n = S(t.id, e.id);
+      n && T({ to: `/match/$matchId`, params: { matchId: n } });
+    },
+    K = (e) => {
+      let n = OF(t.id, e.id);
       n && T({ to: `/match/$matchId`, params: { matchId: n } });
     },
     A = new Map();
@@ -162,7 +167,7 @@ function b() {
                     children: t.map((e) =>
                       (0, y.jsx)(
                         x,
-                        { fx: e, nameOf: O, onPlay: () => k(e), canPlay: D },
+                        { fx: e, nameOf: O, onPlay: () => k(e), onOpen: () => K(e), canPlay: D },
                         e.id,
                       ),
                     ),
@@ -196,7 +201,7 @@ function b() {
                       n.map((e) =>
                         (0, y.jsx)(
                           x,
-                          { fx: e, nameOf: O, onPlay: () => k(e), canPlay: D },
+                          { fx: e, nameOf: O, onPlay: () => k(e), onOpen: () => K(e), canPlay: D },
                           e.id,
                         ),
                       ),
@@ -247,6 +252,7 @@ function b() {
                                   fx: e,
                                   nameOf: O,
                                   onPlay: () => k(e),
+                                  onOpen: () => K(e),
                                   canPlay: D,
                                 },
                                 e.id,
@@ -267,11 +273,11 @@ function b() {
     ],
   });
 }
-function x({ fx: e, nameOf: n, onPlay: r, canPlay: i }) {
+function x({ fx: e, nameOf: n, onPlay: r, onOpen: OP, canPlay: i }) {
   let a = !!(e.playerA && e.playerB && !e.winnerId && !e.bye),
     s = !!(e.winnerId && !e.bye),
     o = e.winnerId && e.scoreA != null && e.scoreB != null,
-    c = !!(a && i),
+    c = !!((a || s) && i),
     l = a
       ? {
           background: `#1f6b45`,
@@ -346,7 +352,8 @@ function x({ fx: e, nameOf: n, onPlay: r, canPlay: i }) {
           };
   return (0, y.jsxs)(`button`, {
     type: `button`,
-    onClick: c ? r : void 0,
+    onClick: c ? (a ? r : OP) : void 0,
+    title: c && s ? `Corriger le score` : void 0,
     disabled: !c,
     className: t(
       `oche-fx`,
@@ -400,7 +407,7 @@ function x({ fx: e, nameOf: n, onPlay: r, canPlay: i }) {
         (0, y.jsx)(`p`, {
           className: `oche-fx__badge oche-fx__badge--done`,
           style: u,
-          children: `Terminé`,
+          children: i ? `Terminé · corriger` : `Terminé`,
         }),
       !a &&
         !s &&

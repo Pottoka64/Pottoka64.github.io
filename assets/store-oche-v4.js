@@ -4717,6 +4717,7 @@ function vo(e, t, n, r, i) {
       (e) =>
         e.bracket === `losers` &&
         e.round === o.round &&
+        !e.winnerId &&
         (!e.playerA || !e.playerB),
     );
     e && (e.playerA ? (e.playerB ||= s) : (e.playerA = s));
@@ -4978,7 +4979,10 @@ function Ao(e, t) {
   for (let r of t.tournament.fixtures) {
     if (!r.winnerId) continue;
     let t = e.tournament.fixtures.find((e) => e.id === r.id);
-    t && !t.winnerId && (n += 1);
+    if (!t) continue;
+    let a = r.rev ?? 0,
+      o = t.rev ?? 0;
+    a > o ? (n += 1) : !t.winnerId && a >= o && (n += 1);
   }
   return n;
 }
@@ -4993,8 +4997,24 @@ function jo(e, t) {
   t.tournament.shareCode && (n.shareCode = t.tournament.shareCode);
   for (let e of t.tournament.fixtures ?? []) {
     let t = n.fixtures.find((t) => t.id === e.id);
-    e.winnerId &&
-      t &&
+    if (!t) continue;
+    let r = e.rev ?? 0,
+      i = t.rev ?? 0;
+    if (r > i) {
+      // Correction locale plus récente que le serveur : elle l'emporte.
+      let a = __ocheReplaceResult(n, e.id, e.winnerId, e.matchId, {
+        a: e.scoreA ?? 0,
+        b: e.scoreB ?? 0,
+      });
+      if (a) {
+        n = a.tournament;
+        let o = n.fixtures.find((t) => t.id === e.id);
+        o && (o.rev = r);
+      }
+      continue;
+    }
+    r === i &&
+      e.winnerId &&
       !t.winnerId &&
       (n = vo(n, e.id, e.winnerId, e.matchId ?? ``, {
         a: e.scoreA ?? 0,
@@ -5007,10 +5027,140 @@ function jo(e, t) {
   for (let e of t.matches ?? []) {
     if (!e) continue;
     let t = i.get(e.id);
-    (!t || (e.status === `complete` && t.status !== `complete`)) &&
+    if (!t) {
+      // Match local inconnu du serveur : on le jette s'il appartient à un
+      // résultat effacé depuis par une correction (rev serveur plus récente).
+      let r = e.fixtureId && n.fixtures.find((t) => t.id === e.fixtureId);
+      if (r && r.matchId !== e.id && (r.rev ?? 0) > (e.rev ?? 0)) continue;
+      i.set(e.id, e);
+      continue;
+    }
+    ((e.rev ?? 0) > (t.rev ?? 0) ||
+      ((e.rev ?? 0) === (t.rev ?? 0) &&
+        e.status === `complete` &&
+        t.status !== `complete`)) &&
       i.set(e.id, e);
   }
   return { tournament: n, players: [...r.values()], matches: [...i.values()] };
+}
+// ── Correction d'un résultat déjà saisi ─────────────────────────────────────
+// Chaque fixture / match corrigé porte un compteur `rev` (révision). Les
+// fusions (jo / Ao) s'en servent : la révision la plus haute gagne, et un
+// résultat effacé par une correction ne « ressuscite » pas depuis un vieux
+// téléphone.
+function __ocheBump(e) {
+  e.rev = (e.rev ?? 0) + 1;
+}
+function __ocheDown(e, t) {
+  return t.bracket === `winners`
+    ? e.filter(
+        (e) =>
+          e !== t &&
+          ((e.bracket === `winners` && e.round > t.round) ||
+            e.bracket === `losers` ||
+            e.bracket === `final` ||
+            e.bracket === `third`),
+      )
+    : t.bracket === `losers`
+      ? e.filter(
+          (e) =>
+            e !== t &&
+            ((e.bracket === `losers` && e.round > t.round) ||
+              e.bracket === `final`),
+        )
+      : [];
+}
+function __ochePlayed(e) {
+  return !!((e.winnerId && !e.bye) || e.matchId);
+}
+function __ocheClearFx(e, t, n) {
+  if (!t.winnerId) return;
+  let r = t.winnerId,
+    i = t.loserId ?? (t.playerA === r ? t.playerB : t.playerA),
+    a = [r, i].filter(Boolean),
+    o = (e) => a.includes(e.playerA) || a.includes(e.playerB);
+  // 1. Les matchs suivants déjà décidés qui impliquent ces joueurs sont
+  //    effacés d'abord (en cascade).
+  for (let k = 0; k < 64; k++) {
+    let d = __ocheDown(e, t).find((x) => x.winnerId && o(x));
+    if (!d) break;
+    __ocheClearFx(e, d, n);
+  }
+  // 2. On retire vainqueur / perdant des cases qu'ils occupaient plus loin.
+  for (let d of __ocheDown(e, t)) {
+    if (d.winnerId) continue;
+    let ch = !1;
+    a.includes(d.playerA) && ((d.playerA = null), (ch = !0)),
+      a.includes(d.playerB) && ((d.playerB = null), (ch = !0)),
+      ch &&
+        (d.matchId &&
+          (n.affected.push({ ...d, pending: !0 }),
+          n.removedMatches.push(d.matchId),
+          (d.matchId = void 0)),
+        __ocheBump(d));
+  }
+  // 3. Le match lui-même.
+  t !== n.root &&
+    (__ochePlayed(t) && n.affected.push({ ...t }),
+    t.matchId && (n.removedMatches.push(t.matchId), (t.matchId = void 0)));
+  (t.winnerId = void 0),
+    (t.loserId = void 0),
+    delete t.scoreA,
+    delete t.scoreB,
+    t.bye && t.bracket === `losers` && (t.bye = !1),
+    __ocheBump(t);
+}
+// → { tournament, affected: Fixture[], removedMatches: string[] } | null
+function __ocheReplaceResult(e, t, n, r, i) {
+  let a = (e.fixtures ?? []).map((e) => ({ ...e })),
+    o = a.find((e) => e.id === t);
+  if (!o) return null;
+  let s = { root: o, affected: [], removedMatches: [] },
+    c;
+  if (!n) __ocheClearFx(a, o, s), (c = { ...e, fixtures: a });
+  else if (o.winnerId === n)
+    (o.scoreA = i?.a ?? o.scoreA),
+      (o.scoreB = i?.b ?? o.scoreB),
+      r && (o.matchId = r),
+      __ocheBump(o),
+      (c = { ...e, fixtures: a });
+  else {
+    __ocheClearFx(a, o, s);
+    let t = o.rev;
+    (c = vo(
+      { ...e, fixtures: a, status: `running`, winnerId: void 0 },
+      o.id,
+      n,
+      r ?? o.matchId,
+      i,
+    )),
+      (c.fixtures.find((e) => e.id === o.id).rev = t);
+  }
+  // Poules : si les qualifiés (ou leur ordre) changent, la phase finale
+  // déjà tirée est refaite.
+  if (e.type === `groups` && o.bracket === `group`) {
+    let t = c.fixtures.filter((e) => e.bracket === `winners`);
+    if (t.length > 0) {
+      let n = yo(e.fixtures) ? bo(e.fixtures, e).join(`|`) : ``,
+        r = yo(c.fixtures) ? bo(c.fixtures, c).join(`|`) : ``;
+      if (n !== r) {
+        for (let e of t)
+          __ochePlayed(e) &&
+            (s.affected.push({ ...e, pending: !e.winnerId }),
+            e.matchId && s.removedMatches.push(e.matchId));
+        let e = c.fixtures.filter((e) => e.bracket !== `winners`);
+        c = {
+          ...c,
+          fixtures: yo(e) ? [...e, ...so(bo(e, c), `winners`, 1)] : e,
+        };
+      }
+    }
+  }
+  let l = Oo(c);
+  return (
+    (c = { ...c, status: l ? `complete` : `running`, winnerId: l }),
+    { tournament: c, affected: s.affected, removedMatches: s.removedMatches }
+  );
 }
 function Mo(e) {
   return !!e.hostSecret;
@@ -5326,6 +5476,96 @@ var ts = Ba()(
           null
         );
       },
+      // Corriger un match terminé (hors tournoi : libre ; tournoi : marqueur).
+      // → { ok: true, unchanged?, reset } | { error } | { confirm: string[] }
+      correctResult: (n, r, i) => {
+        let a = t().matches.find((e) => e.id === n);
+        if (!a) return { error: `Match introuvable.` };
+        if (a.status !== `complete`)
+          return { error: `Ce match n’est pas encore terminé.` };
+        let o = { ...a, status: `playing`, winnerId: void 0 },
+          s = to(o, r);
+        if (s) return { error: s };
+        let c = a.tournamentId
+          ? t().tournaments.find((e) => e.id === a.tournamentId)
+          : void 0;
+        if (c && !Mo(c))
+          return { error: `Seul un marqueur peut corriger le score.` };
+        let l = $a(a);
+        if (a.playerIds.every((e) => (l[e] ?? 0) === (r[e] ?? 0)))
+          return { ok: !0, unchanged: !0, reset: 0 };
+        let u = no(o, r);
+        (u.rev = (a.rev ?? 0) + 1), (u.correctedAt = Date.now());
+        let d = c && a.fixtureId && c.fixtures.find((e) => e.id === a.fixtureId);
+        if (!d)
+          return (
+            e({ matches: t().matches.map((e) => (e.id === n ? u : e)) }),
+            { ok: !0, reset: 0 }
+          );
+        let f = $a(u),
+          p = __ocheReplaceResult(c, d.id, u.winnerId, u.id, {
+            a: d.playerA ? (f[d.playerA] ?? 0) : 0,
+            b: d.playerB ? (f[d.playerB] ?? 0) : 0,
+          });
+        if (!p) return { error: `Match introuvable dans le tableau.` };
+        if (p.affected.length > 0 && !i) {
+          let e = Object.fromEntries(t().players.map((e) => [e.id, e.name])),
+            n = (t) => (t ? (e[t] ?? `Joueur`) : `?`);
+          return {
+            confirm: p.affected.map(
+              (e) =>
+                `${ko(c, e.round, e.bracket)} : ${n(e.playerA)} – ${n(e.playerB)}` +
+                (e.winnerId && e.scoreA != null && e.scoreB != null
+                  ? ` (${e.scoreA}–${e.scoreB})`
+                  : e.pending
+                    ? ` (en cours)`
+                    : ``),
+            ),
+          };
+        }
+        let m = p.tournament.fixtures.find((e) => e.id === d.id);
+        (u.rev = Math.max(u.rev, m?.rev ?? 0)), m && (m.rev = u.rev);
+        let h = new Set(p.removedMatches.filter((e) => e !== n));
+        return (
+          e({
+            matches: t()
+              .matches.filter((e) => !h.has(e.id))
+              .map((e) => (e.id === n ? u : e)),
+            tournaments: t().tournaments.map((e) =>
+              e.id === c.id ? p.tournament : e,
+            ),
+          }),
+          t().pushTournament(c.id),
+          { ok: !0, reset: p.affected.length }
+        );
+      },
+      // Ouvre la fiche d'un match de tournoi terminé (la recrée si besoin).
+      openFixtureMatch: (n, r) => {
+        let i = t().tournaments.find((e) => e.id === n),
+          a = i?.fixtures.find((e) => e.id === r);
+        if (!i || !a?.winnerId || a.bye || !a.playerA || !a.playerB)
+          return null;
+        if (a.matchId && t().matches.some((e) => e.id === a.matchId))
+          return a.matchId;
+        let o = Ya({
+            playerIds: [a.playerA, a.playerB],
+            format: i.format,
+            legsToWin: i.legsToWin ?? 2,
+            setsToWin: i.setsToWin,
+            tournamentId: n,
+            fixtureId: r,
+            cork: !1,
+          }),
+          s = { [a.playerA]: a.scoreA ?? 0, [a.playerB]: a.scoreB ?? 0 };
+        a.matchId && (o.id = a.matchId),
+          (o.status = `complete`),
+          (o.winnerId = a.winnerId),
+          o.setsToWin > 0
+            ? (o.setsWon = { ...o.setsWon, ...s })
+            : (o.legsWon = { ...o.legsWon, ...s }),
+          (o.rev = a.rev ?? 0);
+        return e({ matches: [o, ...t().matches] }), o.id;
+      },
       startTournament: (n) => {
         let r = po({ ...n, cork: !1 });
         return (
@@ -5353,6 +5593,7 @@ var ts = Ba()(
           fixtureId: r,
           cork: !1,
         });
+        o.rev = a.rev ?? 0;
         return (
           e({
             matches: [o, ...t().matches],

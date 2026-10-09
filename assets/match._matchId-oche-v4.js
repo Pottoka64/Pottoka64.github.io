@@ -11,10 +11,10 @@ import {
   v as u,
   x as d,
   y as f,
-} from "./store-oche-v3.js";
+} from "./store-oche-v4.js";
 import { t as p } from "./link-BA5v6P_F.js";
-import { i as m, o as h } from "./index-oche-v3.js";
-import { t as g } from "./button-oche-v3.js";
+import { i as m, o as h } from "./index-oche-v4.js";
+import { t as g } from "./button-oche-v4.js";
 var _ = e(n(), 1),
   v = t();
 function y(e, t) {
@@ -77,8 +77,44 @@ function S({ match: e }) {
     [L, z] = (0, _.useState)(!1),
     [B, V] = (0, _.useState)(null),
     q = l((e) => e.claimHost),
+    CR = l((e) => e.correctResult),
+    [ED, setED] = (0, _.useState)(!1),
+    [CF, setCF] = (0, _.useState)(null),
+    [NT, setNT] = (0, _.useState)(null),
+    CE = T && E,
+    startEdit = () => {
+      A(Object.fromEntries(e.playerIds.map((t) => [t, u(e)[t] ?? 0]))),
+        M(null),
+        setCF(null),
+        setNT(null),
+        setED(!0);
+    },
+    stopEdit = () => {
+      setED(!1), setCF(null), M(null);
+    },
+    saveEdit = (t) => {
+      let n = CR(e.id, k, t);
+      if (n?.confirm) {
+        setCF(n.confirm);
+        return;
+      }
+      if (n?.error) {
+        setCF(null), M(n.error);
+        return;
+      }
+      setED(!1),
+        setCF(null),
+        M(null),
+        setNT(
+          n?.unchanged
+            ? `Aucun changement.`
+            : n?.reset > 0
+              ? `Score corrigé. ${n.reset} match${n.reset > 1 ? `s` : ``} suivant${n.reset > 1 ? `s` : ``} remis à jouer.`
+              : `Score corrigé.`,
+        );
+    },
     N = c({ ...e, status: `playing`, winnerId: void 0 }, k),
-    P = T ? null : o(e, k),
+    P = T && !ED ? null : o(e, k),
     U = async (t) => {
       t.preventDefault(),
         V(null),
@@ -98,7 +134,7 @@ function S({ match: e }) {
       }),
       (0, v.jsx)(`h1`, {
         className: `oche-match__title mt-1 font-display text-4xl font-semibold tracking-tight text-board-cream`,
-        children: T ? `Bravo.` : D ? `En cours` : `On marque`,
+        children: ED ? `Correction` : T ? `Bravo.` : D ? `En cours` : `On marque`,
       }),
       (0, v.jsxs)(`p`, {
         className: `oche-match__meta mt-2 text-muted`,
@@ -107,17 +143,17 @@ function S({ match: e }) {
           w,
           ` `,
           C,
-          T && e.winnerId ? ` · ${y(e.winnerId, t)}` : ``,
+          T && !ED && e.winnerId ? ` · ${y(e.winnerId, t)}` : ``,
           D ? ` · Lecture seule — code marqueur requis` : ``,
         ],
       }),
       (0, v.jsx)(`div`, {
         className: `oche-match__board mt-8 grid gap-4`,
         children: e.playerIds.map((n) => {
-          let i = T && e.winnerId === n,
-            R = T ? (u(e)[n] ?? 0) : (k[n] ?? 0),
+          let i = T && !ED && e.winnerId === n,
+            R = T && !ED ? (u(e)[n] ?? 0) : (k[n] ?? 0),
             L =
-              !T &&
+              (!T || ED) &&
               !D &&
               Math.max(...e.playerIds.map((id) => k[id] ?? 0)) > 0 &&
               R === Math.max(...e.playerIds.map((id) => k[id] ?? 0));
@@ -147,7 +183,7 @@ function S({ match: e }) {
                       }),
                   ],
                 }),
-                T
+                T && !ED
                   ? (0, v.jsx)(`p`, {
                       className: `oche-match__score`,
                       children: u(e)[n] ?? 0,
@@ -231,15 +267,102 @@ function S({ match: e }) {
             }),
           ],
         }),
-      !T &&
+      (!T || ED) &&
         !D &&
         P &&
         (0, v.jsx)(`p`, { className: `mt-4 text-sm text-muted`, children: P }),
+      ED &&
+        !CF &&
+        (0, v.jsx)(`p`, {
+          className: `mt-4 text-sm text-muted`,
+          children: e.tournamentId
+            ? `Corrige le score final. Si le vainqueur change, le tableau suit et tout le salon voit la correction.`
+            : `Corrige le score final du match.`,
+        }),
+      NT &&
+        !ED &&
+        (0, v.jsx)(`p`, {
+          className: `oche-match__corrected mt-4 text-sm text-board-cream`,
+          role: `status`,
+          children: NT,
+        }),
+      T &&
+        !E &&
+        !ED &&
+        (0, v.jsx)(`p`, {
+          className: `mt-4 text-sm text-subtle`,
+          children: `Correction du score réservée aux marqueurs.`,
+        }),
+      ED &&
+        CF &&
+        (0, v.jsxs)(`div`, {
+          className: `surface-card card-cream mt-6 p-4`,
+          role: `alertdialog`,
+          children: [
+            (0, v.jsx)(`p`, {
+              className: `stamp stamp-red`,
+              children: `Attention`,
+            }),
+            (0, v.jsx)(`p`, {
+              className: `mt-3 font-display text-xl`,
+              children: `Le vainqueur change.`,
+            }),
+            (0, v.jsx)(`p`, {
+              className: `mt-2 text-sm text-accent-fg/75`,
+              children:
+                CF.length > 1
+                  ? `Ces ${CF.length} matchs ont déjà été joués (ou sont en cours) avec l’ancien vainqueur. Ils seront effacés et à rejouer :`
+                  : `Ce match a déjà été joué (ou est en cours) avec l’ancien vainqueur. Il sera effacé et à rejouer :`,
+            }),
+            (0, v.jsx)(`ul`, {
+              className: `mt-2 list-disc pl-5 text-sm text-accent-fg`,
+              children: CF.map((e, t) => (0, v.jsx)(`li`, { children: e }, t)),
+            }),
+            (0, v.jsxs)(`div`, {
+              className: `mt-4 flex flex-wrap gap-3`,
+              children: [
+                (0, v.jsx)(g, {
+                  onClick: () => saveEdit(!0),
+                  children: `Corriger quand même`,
+                }),
+                (0, v.jsx)(g, {
+                  variant: `secondary`,
+                  onClick: () => setCF(null),
+                  children: `Annuler`,
+                }),
+              ],
+            }),
+          ],
+        }),
       j &&
         (0, v.jsx)(`p`, { className: `mt-4 text-sm text-danger`, children: j }),
       (0, v.jsxs)(`div`, {
         className: `oche-match__actions mt-8 flex flex-wrap gap-3`,
         children: [
+          ED &&
+            !CF &&
+            (0, v.jsx)(g, {
+              size: `lg`,
+              onClick: () => saveEdit(!1),
+              disabled: !!P,
+              children: `Enregistrer la correction`,
+            }),
+          ED &&
+            !CF &&
+            (0, v.jsx)(g, {
+              variant: `ghost`,
+              size: `lg`,
+              onClick: stopEdit,
+              children: `Annuler`,
+            }),
+          CE &&
+            !ED &&
+            (0, v.jsx)(g, {
+              variant: `secondary`,
+              size: `lg`,
+              onClick: startEdit,
+              children: `Corriger le score`,
+            }),
           !T &&
             !D &&
             (0, v.jsxs)(g, {

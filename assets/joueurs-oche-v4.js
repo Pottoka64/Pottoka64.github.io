@@ -1,9 +1,9 @@
 import { r as e, t } from "./jsx-runtime-BkSabwWG.js";
 import { v as n } from "./useRouter-B1ejQzOU.js";
-import { t as r, u as i, v as a } from "./store-oche-v3.js";
+import { t as r, u as i, v as a } from "./store-oche-v4.js";
 import { t as o } from "./link-BA5v6P_F.js";
-import { t as s } from "./button-oche-v3.js";
-import { t as c } from "./score-table-oche-v3.js";
+import { t as s } from "./button-oche-v4.js";
+import { t as c } from "./score-table-oche-v4.js";
 var l = e(n()),
   u = t();
 function d() {
