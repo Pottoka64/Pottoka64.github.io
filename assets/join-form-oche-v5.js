@@ -1,8 +1,8 @@
 import { r as e, t } from "./jsx-runtime-BkSabwWG.js";
 import { v as n } from "./useRouter-B1ejQzOU.js";
-import { t as r, normalizeSalonCode as N } from "./store-oche-v4.js";
-import { o as i } from "./index-oche-v4.js";
-import { t as a } from "./button-oche-v4.js";
+import { t as r, normalizeSalonCode as N } from "./store-oche-v5.js";
+import { o as i } from "./index-oche-v5.js";
+import { t as a } from "./button-oche-v5.js";
 var o = e(n(), 1),
   s = t();
 function c() {

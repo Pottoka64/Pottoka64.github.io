@@ -4977,12 +4977,14 @@ function ko(e, t, n) {
 function Ao(e, t) {
   let n = 0;
   for (let r of t.tournament.fixtures) {
-    if (!r.winnerId) continue;
     let t = e.tournament.fixtures.find((e) => e.id === r.id);
     if (!t) continue;
     let a = r.rev ?? 0,
       o = t.rev ?? 0;
-    a > o ? (n += 1) : !t.winnerId && a >= o && (n += 1);
+    // Révision locale plus récente (correction OU annulation) → re-push.
+    a > o
+      ? (n += 1)
+      : r.winnerId && !t.winnerId && a >= o && (n += 1);
   }
   return n;
 }
@@ -5160,6 +5162,36 @@ function __ocheReplaceResult(e, t, n, r, i) {
   return (
     (c = { ...c, status: l ? `complete` : `running`, winnerId: l }),
     { tournament: c, affected: s.affected, removedMatches: s.removedMatches }
+  );
+}
+// Libellés « Finale : Camille – Julien (2–1) » des matchs aval touchés.
+function __ocheAffectedLabels(c, l, p) {
+  let e = Object.fromEntries((p ?? []).map((e) => [e.id, e.name])),
+    n = (t) => (t ? (e[t] ?? `Joueur`) : `?`);
+  return l.map(
+    (e) =>
+      `${ko(c, e.round, e.bracket)} : ${n(e.playerA)} – ${n(e.playerB)}` +
+      (e.winnerId && e.scoreA != null && e.scoreB != null
+        ? ` (${e.scoreA}–${e.scoreB})`
+        : e.pending
+          ? ` (en cours)`
+          : ``),
+  );
+}
+// Match terminé → de nouveau à jouer (score à zéro, révision +1).
+function __ocheResetMatch(a) {
+  let e = __ocheClone(a),
+    t = Z(e.playerIds, 0);
+  return (
+    (e.status = `playing`),
+    (e.winnerId = void 0),
+    (e.legsWon = { ...t }),
+    (e.setsWon = { ...t }),
+    (e.legsInSet = { ...t }),
+    (e.finishedLegs = []),
+    (e.rev = (a.rev ?? 0) + 1),
+    (e.cancelledAt = Date.now()),
+    e
   );
 }
 function Mo(e) {
@@ -5508,23 +5540,62 @@ var ts = Ba()(
             b: d.playerB ? (f[d.playerB] ?? 0) : 0,
           });
         if (!p) return { error: `Match introuvable dans le tableau.` };
-        if (p.affected.length > 0 && !i) {
-          let e = Object.fromEntries(t().players.map((e) => [e.id, e.name])),
-            n = (t) => (t ? (e[t] ?? `Joueur`) : `?`);
-          return {
-            confirm: p.affected.map(
-              (e) =>
-                `${ko(c, e.round, e.bracket)} : ${n(e.playerA)} – ${n(e.playerB)}` +
-                (e.winnerId && e.scoreA != null && e.scoreB != null
-                  ? ` (${e.scoreA}–${e.scoreB})`
-                  : e.pending
-                    ? ` (en cours)`
-                    : ``),
-            ),
-          };
-        }
+        if (p.affected.length > 0 && !i)
+          return { confirm: __ocheAffectedLabels(c, p.affected, t().players) };
         let m = p.tournament.fixtures.find((e) => e.id === d.id);
         (u.rev = Math.max(u.rev, m?.rev ?? 0)), m && (m.rev = u.rev);
+        let h = new Set(p.removedMatches.filter((e) => e !== n));
+        return (
+          e({
+            matches: t()
+              .matches.filter((e) => !h.has(e.id))
+              .map((e) => (e.id === n ? u : e)),
+            tournaments: t().tournaments.map((e) =>
+              e.id === c.id ? p.tournament : e,
+            ),
+          }),
+          t().pushTournament(c.id),
+          { ok: !0, reset: p.affected.length }
+        );
+      },
+      // Annuler le score d'un match terminé : il repasse « à jouer » (score et
+      // vainqueur effacés). Mêmes droits que la correction.
+      // force = false → aperçu, rien n'est modifié :
+      //   { confirm: string[], undraw?: true } (liste des matchs suivants
+      //   déjà joués / en cours qui seront effacés, éventuellement vide)
+      // force = true  → { ok: true, reset } | { error }
+      cancelResult: (n, i) => {
+        let a = t().matches.find((e) => e.id === n);
+        if (!a) return { error: `Match introuvable.` };
+        if (a.status !== `complete`)
+          return { error: `Ce match n’est pas encore terminé.` };
+        let c = a.tournamentId
+          ? t().tournaments.find((e) => e.id === a.tournamentId)
+          : void 0;
+        if (c && !Mo(c))
+          return { error: `Seul un marqueur peut annuler le score.` };
+        let u = __ocheResetMatch(a),
+          d = c && a.fixtureId && c.fixtures.find((e) => e.id === a.fixtureId);
+        if (!d)
+          return i
+            ? (e({ matches: t().matches.map((e) => (e.id === n ? u : e)) }),
+              { ok: !0, reset: 0 })
+            : { confirm: [] };
+        let p = __ocheReplaceResult(c, d.id, void 0, u.id);
+        if (!p) return { error: `Match introuvable dans le tableau.` };
+        let g =
+          c.type === `groups` &&
+          d.bracket === `group` &&
+          c.fixtures.some((e) => e.bracket === `winners`) &&
+          !p.tournament.fixtures.some((e) => e.bracket === `winners`);
+        if (!i)
+          return {
+            confirm: __ocheAffectedLabels(c, p.affected, t().players),
+            ...(g ? { undraw: !0 } : {}),
+          };
+        let m = p.tournament.fixtures.find((e) => e.id === d.id),
+          R = Math.max(u.rev, m?.rev ?? 0, (d.rev ?? 0) + 1);
+        (u.rev = R), m && ((m.rev = R), (m.matchId = u.id));
         let h = new Set(p.removedMatches.filter((e) => e !== n));
         return (
           e({

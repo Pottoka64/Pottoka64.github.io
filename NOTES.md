@@ -6,7 +6,7 @@ Les numéros de ligne ci-dessous correspondent à l’état **après** Prettier.
 ## Stack (rappel)
 
 - React + TanStack Router/Start + Zustand + Vite
-- Persistance locale : `localStorage` clé `oche-steel-tip` (`assets/store-oche-v4.js`)
+- Persistance locale : `localStorage` clé `oche-steel-tip` (`assets/store-oche-v5.js`)
 - Partage salon : Supabase RPCs via `assets/share-backend.js` (ex-TanStack `/_serverFn/<hash>` ; voir section Share backend)
 
 ## English UI strings → où changer
@@ -15,18 +15,18 @@ Les numéros de ligne ci-dessous correspondent à l’état **après** Prettier.
 
 | String | Fichier | Ligne (approx.) | Suggestion FR |
 |---|---|---|---|
-| `Live` | `assets/routes-oche-v4.js` | ~154 | `En live` / `Direct` (déjà `En direct` plus bas ~294) |
+| `Live` | `assets/routes-oche-v5.js` | ~154 | `En live` / `Direct` (déjà `En direct` plus bas ~294) |
 | aussi présent dans le HTML SSR | `index.html` | chercher `stamp-red">Live` | aligner avec le JS |
 
 ### Manches / sets (écran Jouer + match)
 
 | String | Fichier | Ligne | Suggestion FR |
 |---|---|---|---|
-| `Manches (best of)` | `assets/jouer-oche-v4.js` | ~116 | `Manches (au meilleur de)` |
-| `Best of ${n}` | `assets/jouer-oche-v4.js` | ~125 | `Au meilleur de ${n}` |
-| `First to ${e} set(s)` | `assets/jouer-oche-v4.js` | ~151 | `Premier à ${e} set(s)` |
-| `First to ` (scoreboard) | `assets/match._matchId-oche-v4.js` | ~92 | `Premier à ` |
-| `sets` / `manches` (unité) | `assets/store-oche-v4.js` | ~4355 | déjà partiel FR ; `sets` → `sets` OK ou `manches de sets` |
+| `Manches (best of)` | `assets/jouer-oche-v5.js` | ~116 | `Manches (au meilleur de)` |
+| `Best of ${n}` | `assets/jouer-oche-v5.js` | ~125 | `Au meilleur de ${n}` |
+| `First to ${e} set(s)` | `assets/jouer-oche-v5.js` | ~151 | `Premier à ${e} set(s)` |
+| `First to ` (scoreboard) | `assets/match._matchId-oche-v5.js` | ~92 | `Premier à ` |
+| `sets` / `manches` (unité) | `assets/store-oche-v5.js` | ~4355 | déjà partiel FR ; `sets` → `sets` OK ou `manches de sets` |
 
 ### Checkouts
 
@@ -51,7 +51,7 @@ Exemples EN à franciser (garder le jargon club si voulu) :
 | 406 | `High score` | `Plus haut score` |
 | 418 | `Count-up 9 (first 9)` | `Count-up 9 (premiers 9)` |
 
-Libellés dynamiques (store) — **`assets/store-oche-v4.js`** ~4295–4351 :
+Libellés dynamiques (store) — **`assets/store-oche-v5.js`** ~4295–4351 :
 
 - `double in` / `double out` / `master in` / `master out` / `entrée libre` / `sortie libre`
 - `Count-up ${e.darts} fléchettes` (~4327)
@@ -76,7 +76,7 @@ Dans `formats-M2QI3UJX.js` / store : Cricket cut-throat, Killer, Knockout, Shang
 
 Deux chemins UI, tous deux appellent `joinTournament` du store (→ `Go` / `share_get` via `share-backend.js`) :
 
-### 1. Formulaire accueil / tournois — `assets/join-form-oche-v4.js`
+### 1. Formulaire accueil / tournois — `assets/join-form-oche-v5.js`
 
 | Condition | Message actuel (déjà FR) | Ligne |
 |---|---|---|
@@ -85,18 +85,18 @@ Deux chemins UI, tous deux appellent `joinTournament` du store (→ `Go` / `shar
 | bouton busy | `Connexion…` / `J’y vais` | ~52 |
 | placeholder | `ex. Q2XMVY` | ~40 |
 
-### 2. Deep-link `/salle/:code` — `assets/salle._code-oche-v4.js`
+### 2. Deep-link `/salle/:code` — `assets/salle._code-oche-v5.js`
 
 | Condition | Message | Ligne |
 |---|---|---|
 | join échoue | `Salon introuvable ou fermé. Vérifiez le code.` | ~effect |
 | en cours | `Connexion au tableau…` | corps |
 
-### 3. Logique store — `assets/store-oche-v4.js`
+### 3. Logique store — `assets/store-oche-v5.js`
 
 - `joinTournament` (~après `publishTournament`) : `Go({ data: { code } })` → snapshot ou `null` (catch silencieux).
 - Validation code salon : `Fo(e)` → regex `/^[A-HJ-NP-Z2-9]{6}$/` (pas de I/O/0/1).
-- Host secret : `Po` (normalise) + `claimHost` → message UI dans `use-share-sync-oche-v4.js` : `Rôle refusé. Vérifie le code marqueur.`
+- Host secret : `Po` (normalise) + `claimHost` → message UI dans `use-share-sync-oche-v5.js` : `Rôle refusé. Vérifie le code marqueur.`
 
 Sans backend grok.me, **tout join échoue** → les messages « salon introuvable » s’affichent même pour un code valide publié ailleurs.
 
@@ -125,7 +125,7 @@ Replaces grok.me `/_serverFn/*` for the six salon ops (`Wo`/`Go`/`Ko`/`qo`/`Jo`/
 | `assets/share-config.js` | `SHARE.supabaseUrl` + `SHARE.supabaseAnonKey` (empty until filled) + `isShareConfigured()` |
 | `assets/share-backend.js` | Adapters `{ data }` → Supabase RPC (`share_publish`, `share_get`, …) |
 | `supabase/share_rooms.sql` | Table + SECURITY DEFINER RPCs + RLS (deny direct table access) |
-| `assets/store-oche-v4.js` | Imports adapters; no longer POSTs those six hashes to `/_serverFn` |
+| `assets/store-oche-v5.js` | Imports adapters; no longer POSTs those six hashes to `/_serverFn` |
 
 **Wiring:** store is already `type=module`; it imports `./share-backend.js`. `index.html` modulepreloads `share-config.js` + `share-backend.js` before the store. `use-share-sync` unchanged (still imports `Go`/`qo` via store re-exports).
 
@@ -160,16 +160,16 @@ Pass UI-facing applied on bundled assets (string literals only):
 
 | Old | New | Files |
 |---|---|---|
-| `Live` (stamp accueil) | `En direct` | `routes-oche-v4.js`, `index.html` |
-| `Manches (best of)` | `Manches (au meilleur des)` | `jouer-oche-v4.js`, `tournois-oche-v4.js` |
+| `Live` (stamp accueil) | `En direct` | `routes-oche-v5.js`, `index.html` |
+| `Manches (best of)` | `Manches (au meilleur des)` | `jouer-oche-v5.js`, `tournois-oche-v5.js` |
 | `Best of N` (options) | `Au meilleur des N` | idem |
 | `First to …` | `Premier à …` | `jouer`, `tournois`, `match._matchId` |
-| `Sets (0 = manches seules)` | `Sets (0 = manches uniquement)` | `jouer-oche-v4.js` |
+| `Sets (0 = manches seules)` | `Sets (0 = manches uniquement)` | `jouer-oche-v5.js` |
 | stamp `Double out` / h1 `Checkouts` / th `Route` | `Sortie en double` / `Sorties` / `Trajectoire` | `checkouts-Ct96LySl.js` |
 | `Table de checkouts` | `Table des sorties` | `regles-CmQFYbOL.js` |
 | `Soft-tip exclu.` | `Fléchettes soft-tip exclues.` | `regles-CmQFYbOL.js` |
 | `byes` / `Byes` (FR prose) | `byes (exemptions)` / `Byes (exemptions)` | `formats-M2QI3UJX.js`, `regles` |
-| join / salle error copy | `Ce salon n’existe pas ou a été fermé. Vérifie le code et réessaie.` (input not cleared) | `join-form-oche-v4.js`, `salle._code-oche-v4.js` |
+| join / salle error copy | `Ce salon n’existe pas ou a été fermé. Vérifie le code et réessaie.` (input not cleared) | `join-form-oche-v5.js`, `salle._code-oche-v5.js` |
 
 **Left intentional EN:** format card names (`501 double out`, Cricket, Shanghai, Killer…); règles glossaire (`Best of 5 = first to 3…`, `double out` in body copy); code prop `route` / CSS `live-dot`.
 
@@ -177,7 +177,7 @@ Pass UI-facing applied on bundled assets (string literals only):
 
 ### Règle byes (double élimination uniquement)
 
-Fichier : `assets/store-oche-v4.js` (`fo` + `vo`).
+Fichier : `assets/store-oche-v5.js` (`fo` + `vo`).
 
 1. **Winners** : `so()` pad toujours à la prochaine puissance de 2 (byes structurels minimaux). Les exemptés sont déjà placés dans le tour suivant via `winnerId`. **Les fixtures `bye: true` sont filtrées** avant d’être renvoyées — plus de cartes « (exempt) » qui inondent le tableau.
 2. **Losers** : on n’alloue des slots que s’il y a des matchs winners non-bye dans ce tour (`n > 0 ? ceil(n/2) : 0`) — plus de `Math.max(1, …)` qui créait un slot losers vide inutile.
@@ -187,14 +187,14 @@ Fichier : `assets/store-oche-v4.js` (`fo` + `vo`).
 ### Couleurs matchs à jouer vs terminés
 
 - CSS : `assets/styles-oche-v2.css` — classes `.oche-fx`, `.oche-fx--play`, `.oche-fx--done`, `.oche-fx--wait`, badges `.oche-fx__badge--play` / `--done`.
-- Hooks JS : `assets/tournoi._tournoiId-oche-v4.js` (carte tableau), `assets/tournois-oche-v4.js` (aperçu).
+- Hooks JS : `assets/tournoi._tournoiId-oche-v5.js` (carte tableau), `assets/tournois-oche-v5.js` (aperçu).
 - À jouer : bordure cream chaude + fond vert board + badge « À jouer ».
 - Terminé : teinte verte atténuée, opacite ~0.72, badge « Terminé ».
 - En attente : fond raised, opacité 0.8.
 
 Supabase share wiring (`share-config.js` / `share-backend.js`) non touché.
 
-## Correction d’un score déjà saisi (2026-10-09) — bundles `-oche-v4`
+## Correction d’un score déjà saisi (2026-10-09) — introduit en bundles `-oche-v4`
 
 Rappel : le match ne se saisit **pas** volée par volée. L’écran match enregistre le score final (manches / sets par joueur, steppers − / +). La correction porte donc sur ce score final.
 
@@ -204,7 +204,7 @@ Rappel : le match ne se saisit **pas** volée par volée. L’écran match enreg
 - Si le vainqueur change et que des matchs suivants ont déjà été joués / sont en cours : carte **« Attention — Le vainqueur change. »** avec la liste (ex. `Finale : Camille – Julien (2–1)`), **« Corriger quand même »** les efface (à rejouer) / **« Annuler »**. Après coup : « Score corrigé. N match(s) suivant(s) remis à jouer. »
 - Invités sans code marqueur : pas de bouton, texte « Correction du score réservée aux marqueurs. » ; le store refuse aussi (`Seul un marqueur peut corriger le score.`).
 
-### Store (`assets/store-oche-v4.js`)
+### Store (`assets/store-oche-v5.js`)
 - Action `correctResult(matchId, scores, force)` → `{ ok, reset, unchanged? } | { error } | { confirm: string[] }`, puis `pushTournament`.
 - `__ocheReplaceResult(t, fixtureId, winnerId, matchId, {a,b})` : même vainqueur → scores seuls ; vainqueur différent → `__ocheClearFx` (efface en cascade les matchs aval impliquant les deux joueurs, retire les joueurs des cases aval, supprime les matchs liés) puis `vo` (repropage : tour suivant, petite finale, repêchage, finale double KO, rondes suisses). Poules : si les qualifiés/l’ordre changent, la phase finale est supprimée puis re-tirée. Statut / champion recalculés (`Oo`).
 - `__ocheDown` = matchs aval : winners → tours suivants + repêchage + finale + petite finale ; losers → tours de repêchage suivants + finale.
@@ -219,3 +219,25 @@ Rappel : le match ne se saisit **pas** volée par volée. L’écran match enreg
 - Suisse : corriger une ronde passée ne refait pas les appariements déjà tirés.
 - Les téléphones restés sur l’ancien bundle (v3) ne connaissent pas `rev` : ils doivent recharger la page.
 - L’erreur React #418 (hydratation) en viewport mobile existait déjà avant (snapshot SSR de l’accueil).
+
+## Annuler un score saisi (2026-10-09) — bundles `-oche-v5`
+
+### UX
+- Match terminé (écran match) → à côté de « Corriger le score », bouton rouge **« Annuler le score »** (mêmes droits que la correction : amical libre ; tournoi hôte / marqueur ; invité → « Correction et annulation du score réservées aux marqueurs. »).
+- Toujours une carte de confirmation **« Attention — Annuler ce score ? »** : « Le match repassera « à jouer » et son score sera effacé. Tout le salon verra l’annulation. » + liste des matchs suivants déjà joués / en cours qui seront effacés (`Finale : Camille – Léa (2–1)`) + en poules « La phase finale déjà tirée sera retirée… ». Boutons **« Annuler le score »** (danger) / **« Garder le score »**.
+- Après coup : le même écran repasse en « On marque » (steppers à 0, « Enregistrer le score ») avec « Score annulé. » / « Score annulé. N match(s) suivant(s) remis à jouer. » / « Score annulé. Phase finale retirée. ». Sur le tableau la carte redevient « À jouer · saisir le score ».
+
+### Store
+- `cancelResult(matchId, force)` : `force` faux → aperçu sans effet `{ confirm: string[], undraw? }` ; vrai → `{ ok, reset } | { error }` puis `pushTournament`.
+- Le match est remis à zéro **sur place** (`__ocheResetMatch` : `status: playing`, vainqueur / manches / sets effacés, même id, `rev + 1`, `cancelledAt`) ; la fixture garde `matchId` mais perd vainqueur / score (`__ocheReplaceResult(t, fid, undefined)` → `__ocheClearFx`) ; rev fixture = rev match.
+- Cascade = celle de la correction : joueurs retirés des cases aval (finale, petite finale, repêchage, finale double KO) ; matchs aval joués / en cours effacés (fiches supprimées). Poules : groupe incomplet → phase finale retirée ; elle se re-tire automatiquement quand la dernière poule est saisie. Statut / champion recalculés (tournoi rouvert).
+- Libellés de confirmation factorisés dans `__ocheAffectedLabels` (correction + annulation).
+- Sync : `Ao` compte maintenant toute fixture locale de rev plus haute (même sans vainqueur) → l’hôte re-pousse une annulation. `jo` applique déjà une rev plus haute sans vainqueur comme un effacement ; une ancienne fiche « terminée » (rev plus basse) ne ressuscite pas. Un nouveau score saisi après annulation garde la même rev et passe par la règle « même rev, résultat présent ».
+
+### Tests
+- `correct.test.mjs` : 23 cas (11 nouveaux pour l’annulation : amical, invité, demi sans/avec aval joué, finale → tournoi rouvert, sync dans les deux sens, re-saisie synchronisée, double KO, poules dé-tirées / re-tirées, poule unique).
+- `cancel.cjs` : Chrome headless 390×844, hôte + marqueur sur un vrai salon (fermé à la fin).
+
+### Limites
+- Suisse : annuler un match d’une ronde passée ne refait pas les appariements déjà tirés (comme la correction).
+- Téléphones sur un vieux bundle (≤ v4) : ils doivent rouvrir le site.

@@ -1,5 +1,5 @@
 import { t as e } from "./jsx-runtime-BkSabwWG.js";
-import { S as t } from "./store-oche-v4.js";
+import { S as t } from "./store-oche-v5.js";
 var n = e();
 function r({ rows: e, names: r, title: i, framed: a = !0 }) {
   if (e.length === 0) return null;

@@ -9,13 +9,13 @@ import {
   t as s,
   u as c,
   x as l,
-} from "./store-oche-v4.js";
+} from "./store-oche-v5.js";
 import { t as u } from "./link-BA5v6P_F.js";
-import { n as d, o as f } from "./index-oche-v4.js";
-import { t as p } from "./button-oche-v4.js";
+import { n as d, o as f } from "./index-oche-v5.js";
+import { t as p } from "./button-oche-v5.js";
 import { n as m } from "./formats-M2QI3UJX.js";
-import { t as h } from "./score-table-oche-v4.js";
-import { n as g, r as _, t as v } from "./use-share-sync-oche-v4.js";
+import { t as h } from "./score-table-oche-v5.js";
+import { n as g, r as _, t as v } from "./use-share-sync-oche-v5.js";
 var y = e();
 function b() {
   let { tournoiId: e } = d.useParams(),

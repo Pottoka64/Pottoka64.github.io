@@ -11,10 +11,10 @@ import {
   v as u,
   x as d,
   y as f,
-} from "./store-oche-v4.js";
+} from "./store-oche-v5.js";
 import { t as p } from "./link-BA5v6P_F.js";
-import { i as m, o as h } from "./index-oche-v4.js";
-import { t as g } from "./button-oche-v4.js";
+import { i as m, o as h } from "./index-oche-v5.js";
+import { t as g } from "./button-oche-v5.js";
 var _ = e(n(), 1),
   v = t();
 function y(e, t) {
@@ -81,7 +81,35 @@ function S({ match: e }) {
     [ED, setED] = (0, _.useState)(!1),
     [CF, setCF] = (0, _.useState)(null),
     [NT, setNT] = (0, _.useState)(null),
+    XR = l((e) => e.cancelResult),
+    [CX, setCX] = (0, _.useState)(null),
     CE = T && E,
+    askCancel = () => {
+      let t = XR(e.id, !1);
+      if (t?.error) {
+        M(t.error);
+        return;
+      }
+      M(null), setNT(null), setCX({ list: t?.confirm ?? [], undraw: !!t?.undraw });
+    },
+    doCancel = () => {
+      let t = XR(e.id, !0);
+      if (t?.error) {
+        setCX(null), M(t.error);
+        return;
+      }
+      let n = CX?.undraw;
+      setCX(null),
+        M(null),
+        A(Object.fromEntries(e.playerIds.map((e) => [e, 0]))),
+        setNT(
+          t?.reset > 0
+            ? `Score annulé. ${t.reset} match${t.reset > 1 ? `s` : ``} suivant${t.reset > 1 ? `s` : ``} remis à jouer.`
+            : n
+              ? `Score annulé. Phase finale retirée.`
+              : `Score annulé.`,
+        );
+    },
     startEdit = () => {
       A(Object.fromEntries(e.playerIds.map((t) => [t, u(e)[t] ?? 0]))),
         M(null),
@@ -291,7 +319,64 @@ function S({ match: e }) {
         !ED &&
         (0, v.jsx)(`p`, {
           className: `mt-4 text-sm text-subtle`,
-          children: `Correction du score réservée aux marqueurs.`,
+          children: `Correction et annulation du score réservées aux marqueurs.`,
+        }),
+      CX &&
+        !ED &&
+        (0, v.jsxs)(`div`, {
+          className: `oche-match__cancel surface-card card-cream mt-6 p-4`,
+          role: `alertdialog`,
+          children: [
+            (0, v.jsx)(`p`, {
+              className: `stamp stamp-red`,
+              children: `Attention`,
+            }),
+            (0, v.jsx)(`p`, {
+              className: `mt-3 font-display text-xl`,
+              children: `Annuler ce score ?`,
+            }),
+            (0, v.jsx)(`p`, {
+              className: `mt-2 text-sm text-accent-fg/75`,
+              children: e.tournamentId
+                ? `Le match repassera « à jouer » et son score sera effacé. Tout le salon verra l’annulation.`
+                : `Le match repassera « à jouer » et son score sera effacé.`,
+            }),
+            CX.list.length > 0 &&
+              (0, v.jsx)(`p`, {
+                className: `mt-2 text-sm text-accent-fg/75`,
+                children:
+                  CX.list.length > 1
+                    ? `Ces ${CX.list.length} matchs suivants ont déjà été joués (ou sont en cours). Ils seront effacés et à rejouer :`
+                    : `Ce match suivant a déjà été joué (ou est en cours). Il sera effacé et à rejouer :`,
+              }),
+            CX.list.length > 0 &&
+              (0, v.jsx)(`ul`, {
+                className: `mt-2 list-disc pl-5 text-sm text-accent-fg`,
+                children: CX.list.map((e, t) =>
+                  (0, v.jsx)(`li`, { children: e }, t),
+                ),
+              }),
+            CX.undraw &&
+              (0, v.jsx)(`p`, {
+                className: `mt-2 text-sm text-accent-fg/75`,
+                children: `La phase finale déjà tirée sera retirée. Elle sera tirée à nouveau quand toutes les poules seront terminées.`,
+              }),
+            (0, v.jsxs)(`div`, {
+              className: `mt-4 flex flex-wrap gap-3`,
+              children: [
+                (0, v.jsx)(g, {
+                  variant: `danger`,
+                  onClick: doCancel,
+                  children: `Annuler le score`,
+                }),
+                (0, v.jsx)(g, {
+                  variant: `secondary`,
+                  onClick: () => setCX(null),
+                  children: `Garder le score`,
+                }),
+              ],
+            }),
+          ],
         }),
       ED &&
         CF &&
@@ -357,11 +442,21 @@ function S({ match: e }) {
             }),
           CE &&
             !ED &&
+            !CX &&
             (0, v.jsx)(g, {
               variant: `secondary`,
               size: `lg`,
               onClick: startEdit,
               children: `Corriger le score`,
+            }),
+          CE &&
+            !ED &&
+            !CX &&
+            (0, v.jsx)(g, {
+              variant: `danger`,
+              size: `lg`,
+              onClick: askCancel,
+              children: `Annuler le score`,
             }),
           !T &&
             !D &&
