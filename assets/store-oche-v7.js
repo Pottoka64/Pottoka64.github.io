@@ -5573,7 +5573,32 @@ var ts = Ba()(
       players: Xo,
       matches: [],
       tournaments: [],
-      setHydrated: (t) => e({ hydrated: t }),
+      setHydrated: (n) => {
+        e({ hydrated: n });
+        // Copie locale (localStorage) d'un tournoi : on répare aussi le
+        // tableau au démarrage, pas seulement à la réception d'un snapshot.
+        if (n) for (let e of t().tournaments) e?.type === `double` && t().healTournament(e.id);
+      },
+      // Réparation du repêchage double KO sur l'état local (invité compris) ;
+      // l'hôte / marqueur renvoie le tableau réparé au salon. → changed
+      healTournament: (n) => {
+        let r = t().tournaments.find((e) => e.id === n);
+        if (!r || r.type !== `double`) return !1;
+        let i = __ocheHealDouble(
+          r,
+          t().matches.filter((e) => e.tournamentId === n),
+        );
+        if (!i.changed) return !1;
+        let a = Oo(i.tournament),
+          o = {
+            ...i.tournament,
+            status: a ? `complete` : `running`,
+            winnerId: a,
+          };
+        e({ tournaments: t().tournaments.map((e) => (e.id === n ? o : e)) });
+        o.hostSecret && o.shareCode && t().pushTournament(n);
+        return !0;
+      },
       addPlayer: (n) => {
         let r = Pa(),
           i = n.trim() || `Joueur`;

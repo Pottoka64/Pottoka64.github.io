@@ -1,11 +1,11 @@
 import { t as e } from "./jsx-runtime-BkSabwWG.js";
-import { S as t, d as n, l as r, t as i, x as a } from "./store-oche-v6.js";
+import { S as t, d as n, l as r, t as i, x as a } from "./store-oche-v7.js";
 import { t as o } from "./link-BA5v6P_F.js";
-import { t as s } from "./index-oche-v6.js";
-import { t as c } from "./button-oche-v6.js";
+import { t as s } from "./index-oche-v7.js";
+import { t as c } from "./button-oche-v7.js";
 import { n as l } from "./formats-M2QI3UJX.js";
-import { t as u } from "./score-table-oche-v6.js";
-import { n as d, r as f, t as p } from "./use-share-sync-oche-v6.js";
+import { t as u } from "./score-table-oche-v7.js";
+import { n as d, r as f, t as p } from "./use-share-sync-oche-v7.js";
 var m = e();
 function h({ place: e, names: n, tall: r, delay: i }) {
   let a = e === 1 ? `cream` : e === 2 ? `green` : `red`;

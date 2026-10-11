@@ -8,9 +8,9 @@ import {
   r as s,
   t as c,
   normalizeSalonCode as NC,
-} from "./store-oche-v6.js";
-import { o as l } from "./index-oche-v6.js";
-import { t as u } from "./button-oche-v6.js";
+} from "./store-oche-v7.js";
+import { o as l } from "./index-oche-v7.js";
+import { t as u } from "./button-oche-v7.js";
 var d = e(n(), 1),
   f = t();
 function p({ tournament: e }) {
@@ -377,6 +377,8 @@ function h(e) {
         try {
           let f = await s({ data: { code: u } });
           if (d) return;
+          // Toujours réparer la copie locale (même sans nouvelle version serveur).
+          c.getState().healTournament?.(e);
           if (f?.closed || (f && !f.payload)) {
             l(e);
             return;
