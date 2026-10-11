@@ -8,9 +8,9 @@ import {
   r as s,
   t as c,
   normalizeSalonCode as NC,
-} from "./store-oche-v5.js";
-import { o as l } from "./index-oche-v5.js";
-import { t as u } from "./button-oche-v5.js";
+} from "./store-oche-v6.js";
+import { o as l } from "./index-oche-v6.js";
+import { t as u } from "./button-oche-v6.js";
 var d = e(n(), 1),
   f = t();
 function p({ tournament: e }) {

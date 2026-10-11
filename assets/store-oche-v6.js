@@ -4592,13 +4592,18 @@ function fo(e) {
     //   is not flooded with "(exempt)" cards.
     // - Losers: only allocate slots from real (non-bye) winners matches; never
     //   force a losers round when that winners round produced 0 losers.
+    // Repêchage r = perdants du tour winners r + vainqueurs du repêchage r-1
+    // (placés dans la 1re case libre, voir __ocheHealDouble). Capacité exacte :
+    // ceil(entrants / 2) matchs, jusqu'à ce qu'il ne reste qu'un survivant.
     let t = so(e.playerIds, `winners`),
       n = Math.max(...t.map((e) => e.round)),
       r = [],
-      i = n + 1;
-    for (let e = 0; e < i; e++) {
-      let n = t.filter((t) => t.round === e && !t.bye).length,
-        i = n > 0 ? Math.ceil(n / 2) : 0;
+      w = 0;
+    for (let e = 0; e < 64; e++) {
+      let k = e <= n ? t.filter((t) => t.round === e && !t.bye).length : 0,
+        u = k + w;
+      if (e > n && u <= 1) break;
+      let i = Math.ceil(u / 2);
       for (let t = 0; t < i; t++)
         r.push({
           id: Q(),
@@ -4608,6 +4613,7 @@ function fo(e) {
           playerA: null,
           playerB: null,
         });
+      w = i;
     }
     t = t.filter((e) => !e.bye);
     let a = {
@@ -4694,6 +4700,153 @@ function _o(e, t = Math.random) {
     (r = mo(e.playerIds, t)), (i = fo({ ...e, playerIds: r }));
   return { ...e, playerIds: r, fixtures: i };
 }
+// ── Double KO : placement du repêchage ─────────────────────────────────────
+// Recalcule, à partir des résultats, qui doit jouer chaque tour de repêchage :
+// entrants(r) = perdants du tour winners r + vainqueurs du repêchage r-1.
+// Les cases déjà occupées (bons joueurs) sont gardées ; un entrant absent est
+// mis dans la 1re case libre (un match est ajouté s'il n'y en a plus) ; un
+// joueur en trop est retiré. Si un match est déjà ouvert pour une case, ses
+// joueurs font foi. Quand plus personne ne peut arriver dans un tour, un
+// joueur seul est exempté ; le dernier survivant va en grande finale.
+// → { tournament, changed }
+function __ocheHealDouble(t, M) {
+  if (!t || t.type !== `double` || !Array.isArray(t.fixtures))
+    return { tournament: t, changed: !1 };
+  let F = t.fixtures.map((e) => ({ ...e })),
+    ch = !1,
+    W = F.filter((e) => e.bracket === `winners`);
+  if (W.length === 0) return { tournament: t, changed: !1 };
+  let wm = Math.max(...W.map((e) => e.round)),
+    mm = new Map((M ?? []).filter(Boolean).map((e) => [e.id, e])),
+    lr = (r) =>
+      F.filter((e) => e.bracket === `losers` && e.round === r).sort(
+        (e, t) => e.index - t.index,
+      ),
+    lo_ = (e) =>
+      e.loserId ?? (e.playerA === e.winnerId ? e.playerB : e.playerA),
+    seats = (e) => [e.playerA, e.playerB].filter(Boolean),
+    prevClosed = !0,
+    prev = [],
+    champ,
+    maxL = Math.max(-1, ...F.filter((e) => e.bracket === `losers`).map((e) => e.round));
+  for (let r = 0; r < 64; r++) {
+    let L = lr(r),
+      wr = W.filter((e) => e.round === r && !e.bye).sort((e, t) => e.index - t.index),
+      E = [];
+    for (let e of wr) if (e.winnerId) { let t = lo_(e); t && !E.includes(t) && E.push(t); }
+    for (let e of prev)
+      if (e.winnerId) { let t = e.winnerId; !E.includes(t) && E.push(t); }
+    let closed =
+      prevClosed &&
+      !wr.some((e) => !e.winnerId) &&
+      !prev.some((e) => !e.winnerId && seats(e).length > 0);
+    if (r > wm && L.length === 0 && E.length === 0 && r > maxL) break;
+    let Es = new Set(E),
+      seen = new Set();
+    // Résultats acquis : intouchables (sauf exemption devenue fausse).
+    for (let e of L)
+      if (e.winnerId && e.bye && !e.matchId) {
+        let p = e.winnerId,
+          later = F.some(
+            (t) =>
+              t.bracket === `losers` &&
+              t.round === r + 1 &&
+              t.winnerId &&
+              !t.bye &&
+              (t.playerA === p || t.playerB === p),
+          );
+        if ((!Es.has(p) || !closed) && !later) {
+          (e.bye = !1), (e.winnerId = void 0), (e.loserId = void 0), (ch = !0);
+          Es.has(p) || ((e.playerA = null), (e.playerB = null));
+        }
+      }
+    for (let e of L) if (e.winnerId) for (let t of seats(e)) seen.add(t);
+    // Match déjà ouvert : ses joueurs font foi.
+    for (let e of L) {
+      if (e.winnerId || !e.matchId) continue;
+      let m = mm.get(e.matchId),
+        p = m?.playerIds;
+      if (
+        !p ||
+        p.length !== 2 ||
+        !p.every((t) => Es.has(t) && !seen.has(t)) ||
+        (p.includes(e.playerA) && p.includes(e.playerB))
+      )
+        continue;
+      let a = p.includes(e.playerA) ? e.playerA : p.includes(e.playerB) ? e.playerB : p[0];
+      (e.playerA = a), (e.playerB = p.find((t) => t !== a)), (ch = !0);
+      for (let t of L)
+        if (t !== e && !t.winnerId && !t.matchId)
+          for (let n of [`playerA`, `playerB`]) p.includes(t[n]) && ((t[n] = null), (ch = !0));
+    }
+    let und = L.filter((e) => !e.winnerId).sort(
+      (e, t) => (t.matchId ? 1 : 0) - (e.matchId ? 1 : 0) || e.index - t.index,
+    );
+    for (let e of und)
+      for (let n of [`playerA`, `playerB`]) {
+        let p = e[n];
+        if (!p) continue;
+        if (!Es.has(p) || seen.has(p)) {
+          (e[n] = null), (ch = !0);
+          e.matchId && (e.matchId = void 0);
+        } else seen.add(p);
+      }
+    let miss = E.filter((e) => !seen.has(e));
+    // Dernier survivant du repêchage → grande finale (pas de case).
+    if (r > wm && closed && E.length === 1 && !L.some((e) => e.winnerId)) {
+      champ = E[0];
+      for (let e of L) for (let n of [`playerA`, `playerB`]) e[n] === champ && ((e[n] = null), (ch = !0));
+      miss = [];
+    }
+    for (let p of miss) {
+      let f = L.find((e) => !e.winnerId && !e.bye && (!e.playerA || !e.playerB));
+      if (!f) {
+        let i = Math.max(-1, ...L.map((e) => e.index)) + 1;
+        (f = {
+          id: `${t.id}-lb${r}-${i}`,
+          round: r,
+          index: i,
+          bracket: `losers`,
+          playerA: null,
+          playerB: null,
+        }),
+          F.push(f),
+          L.push(f);
+      }
+      f.playerA ? (f.playerB = p) : (f.playerA = p), (ch = !0);
+    }
+    if (closed) {
+      for (let e of L) {
+        if (e.winnerId || e.matchId) continue;
+        let s = seats(e);
+        s.length === 1 &&
+          ((e.bye = !0), (e.winnerId = s[0]), (e.loserId = void 0), (ch = !0));
+      }
+      // Cases vides devenues inutiles (tour clos) : retirées.
+      let d = L.filter((e) => !e.winnerId && !e.matchId && seats(e).length === 0);
+      d.length && ((F = F.filter((e) => !d.includes(e))), (L = L.filter((e) => !d.includes(e))), (ch = !0));
+    }
+    if (champ) {
+      // Tours suivants : plus rien à jouer.
+      let d = F.filter(
+        (e) => e.bracket === `losers` && e.round > r && !e.winnerId && !e.matchId,
+      );
+      d.length && ((F = F.filter((e) => !d.includes(e))), (ch = !0));
+      break;
+    }
+    (prevClosed = closed), (prev = L);
+  }
+  let fin = F.find((e) => e.bracket === `final`);
+  if (fin && !fin.winnerId) {
+    let a = W.find((e) => e.round === wm)?.winnerId ?? null,
+      b = champ ?? null;
+    fin.playerA !== a && ((fin.playerA = a), (ch = !0));
+    fin.playerB !== b && ((fin.playerB = b), (ch = !0));
+  }
+  return ch
+    ? { tournament: { ...t, fixtures: F }, changed: !0 }
+    : { tournament: t, changed: !1 };
+}
 function vo(e, t, n, r, i) {
   let a = e.fixtures.map((e) => ({ ...e })),
     o = a.find((e) => e.id === t);
@@ -4702,7 +4855,9 @@ function vo(e, t, n, r, i) {
   let s = o.playerA === n ? o.playerB : o.playerB === n ? o.playerA : null;
   if (
     ((o.loserId = s ?? void 0),
-    (o.bracket === `winners` || o.bracket === `losers`) && co(a, o, n),
+    (o.bracket === `winners` ||
+      (o.bracket === `losers` && e.type !== `double`)) &&
+      co(a, o, n),
     e.thirdPlace && o.bracket === `winners` && s)
   ) {
     let e = a.filter((e) => e.bracket === `winners`),
@@ -4712,59 +4867,9 @@ function vo(e, t, n, r, i) {
       e && (e.playerA ? (e.playerB ||= s) : (e.playerA = s));
     }
   }
-  if (e.type === `double` && o.bracket === `winners` && s) {
-    let e = a.find(
-      (e) =>
-        e.bracket === `losers` &&
-        e.round === o.round &&
-        !e.winnerId &&
-        (!e.playerA || !e.playerB),
-    );
-    e && (e.playerA ? (e.playerB ||= s) : (e.playerA = s));
-    // After every real winners match in this round has a result, any losers
-    // fixture left with a single player is a structural bye — advance quietly
-    // (no extra exemption card was pre-created).
-    let pendingW = a.some(
-      (e) =>
-        e.bracket === `winners` &&
-        e.round === o.round &&
-        !e.bye &&
-        !e.winnerId,
-    );
-    if (!pendingW) {
-      for (let e of a.filter(
-        (e) => e.bracket === `losers` && e.round === o.round && !e.winnerId,
-      )) {
-        let t = (e.playerA && !e.playerB && e.playerA) || (!e.playerA && e.playerB && e.playerB);
-        if (t) {
-          (e.bye = !0), (e.winnerId = t), co(a, e, t);
-        }
-      }
-    }
-  }
-  if (e.type === `double`) {
-    let e = a.find(
-        (e) =>
-          e.bracket === `winners` &&
-          e.round ===
-            Math.max(
-              ...a.filter((e) => e.bracket === `winners`).map((e) => e.round),
-            ) &&
-          e.winnerId,
-      ),
-      t = a.find(
-        (e) =>
-          e.bracket === `losers` &&
-          e.round ===
-            Math.max(
-              ...a.filter((e) => e.bracket === `losers`).map((e) => e.round),
-            ) &&
-          e.winnerId,
-      ),
-      n = a.find((e) => e.bracket === `final`);
-    n && e?.winnerId && (n.playerA = e.winnerId),
-      n && t?.winnerId && (n.playerB = t.winnerId);
-  }
+  // Double KO : perdants, vainqueurs du repêchage, exemptions et finale sont
+  // placés par __ocheHealDouble (1re case libre, jamais d'écrasement).
+  if (e.type === `double`) a = __ocheHealDouble({ ...e, fixtures: a }).tournament.fixtures;
   if (e.type === `groups`) {
     let t = yo(a),
       n = a.some((e) => e.bracket === `winners`);
@@ -4997,6 +5102,11 @@ function jo(e, t) {
   let n = __ocheClone(e.tournament);
   Array.isArray(n.fixtures) || (n.fixtures = []);
   t.tournament.shareCode && (n.shareCode = t.tournament.shareCode);
+  if (n.type === `double`)
+    for (let e of t.tournament.fixtures ?? [])
+      e.bracket === `losers` &&
+        !n.fixtures.some((t) => t.id === e.id) &&
+        n.fixtures.push({ ...e });
   for (let e of t.tournament.fixtures ?? []) {
     let t = n.fixtures.find((t) => t.id === e.id);
     if (!t) continue;
@@ -5158,6 +5268,7 @@ function __ocheReplaceResult(e, t, n, r, i) {
       }
     }
   }
+  c.type === `double` && (c = __ocheHealDouble(c).tournament);
   let l = Oo(c);
   return (
     (c = { ...c, status: l ? `complete` : `running`, winnerId: l }),
@@ -5725,9 +5836,12 @@ var ts = Ba()(
           matches: t().matches.filter((e) => e.tournamentId === n.id),
         };
       },
-      ingestSnapshot: (n, r) => {
+      ingestSnapshot: (n, r, noPush) => {
         let i = t().snapshotOf(n.tournament.id),
           a = i ? jo(n, i) : n,
+          hl = __ocheHealDouble(a.tournament, a.matches);
+        hl.changed && (a = { ...a, tournament: hl.tournament });
+        let hp = hl.changed && !noPush;
           o = t().tournaments.find((e) => e.id === n.tournament.id),
           s = {
             ...a.tournament,
@@ -5760,6 +5874,9 @@ var ts = Ba()(
           ],
           tournaments: [s, ...t().tournaments.filter((e) => e.id !== s.id)],
         });
+        // Tableau réparé (ex. joueur sorti du repêchage) : l'hôte / marqueur
+        // le renvoie au salon.
+        hp && s.hostSecret && s.shareCode && t().pushTournament(s.id);
       },
       publishTournament: async (n) => {
         let r = t().tournaments.find((e) => e.id === n);
@@ -5832,7 +5949,7 @@ var ts = Ba()(
                 return;
               }
               let o = jo(a.row.payload, i);
-              t().ingestSnapshot(o, a.row.version);
+              t().ingestSnapshot(o, a.row.version, !0);
               let s = t().snapshotOf(n);
               if (!s) return;
               let c = await Ko({

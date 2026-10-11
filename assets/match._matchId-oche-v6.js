@@ -11,10 +11,10 @@ import {
   v as u,
   x as d,
   y as f,
-} from "./store-oche-v5.js";
+} from "./store-oche-v6.js";
 import { t as p } from "./link-BA5v6P_F.js";
-import { i as m, o as h } from "./index-oche-v5.js";
-import { t as g } from "./button-oche-v5.js";
+import { i as m, o as h } from "./index-oche-v6.js";
+import { t as g } from "./button-oche-v6.js";
 var _ = e(n(), 1),
   v = t();
 function y(e, t) {
