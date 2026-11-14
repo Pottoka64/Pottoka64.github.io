@@ -1,0 +1,31 @@
+name: Generate OCHE icons
+
+on:
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  icons:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Install Pillow and generate icons
+        run: |
+          pip install pillow
+          python tools/make-icons.py
+      - name: Commit and push if the icons changed
+        run: |
+          git config user.name "Camille Herriau"
+          git config user.email "camille@users.noreply.github.com"
+          git add icons __grok/icon-180.png
+          if git diff --cached --quiet; then
+            echo "No icon changes"
+          else
+            git commit -m "Icônes PWA/TWA pour OCHE"
+            git push
+          fi
