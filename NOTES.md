@@ -259,3 +259,89 @@ Deux règles de placement se contredisaient dans le repêchage : un perdant du t
 
 ### Correctif v7 (2026-10-11 soir) — réparation aussi sur la copie locale
 v6 ne réparait qu’à la réception d’un snapshot (`ingestSnapshot`). Un appareil qui avait déjà le tournoi en localStorage à la version serveur (41) ne ré-ingérait jamais (`shareVersion >= version` → return) : Splifou restait invisible. Désormais `healTournament(id)` (store) répare l’état local : au démarrage (`setHydrated(true)`, tous les doubles KO) et à chaque poll de `use-share-sync` (avant le test de version). Invité : affichage réparé ; hôte / marqueur : `pushTournament`. Test : `/workspace/oche-tests/paths.cjs` (1280×800 : /salle, formulaire, copie locale v41 invité / marqueur, écritures bloquées).
+
+## Play Store / TWA (2026-11-14) — côté web
+
+Préparation du site (https://pottoka64.github.io/) pour une publication Google Play
+en Trusted Web Activity (Bubblewrap, à faire ensuite côté Android). Les bundles
+JS (`-oche-v7`) n’ont pas été renommés.
+
+### Fichiers ajoutés / modifiés
+
+| URL live | Rôle |
+|---|---|
+| `/manifest.webmanifest` | Manifeste PWA : name / short_name `OCHE`, `lang: fr`, `start_url` `/`, `scope` `/`, `display: standalone`, `orientation: any` (téléphone, tablette ou pose à plat). |
+| `/icons/icon-192.png`, `/icons/icon-512.png` | Icônes `purpose: any`, dérivées du logo cible de l’en-tête (couleurs CSS). |
+| `/icons/icon-512-maskable.png` | Icône maskable 512, cible dans la zone sûre (~70 % du canvas). |
+| `/icons/apple-touch-icon.png` | 180×180, lié depuis `index.html` et `404.html`. |
+| `/sw.js` | Service worker minimal. |
+| `/hors-ligne.html` | Seule ressource mise en cache, fallback navigation si le réseau échoue. |
+| `/confidentialite.html` | Politique de confidentialité (HTML statique, sans bundle). |
+| `/.well-known/assetlinks.json` | Digital Asset Links, package `io.github.pottoka64.oche`. |
+| `.nojekyll` | Déjà présent à la racine (nécessaire pour servir `/.well-known`). |
+
+`index.html` et `404.html` restent **identiques** : `<link rel="manifest">` vers
+`/manifest.webmanifest`, `theme-color` `#140f0c`, `apple-touch-icon` vers
+`/icons/apple-touch-icon.png`, enregistrement du SW en script inline (aucun
+`?v=` sur les URLs de modules).
+
+**Hydratation :** `assets/index-oche-v7.js` réécrit le `<head>` après montage
+vers `/__grok/manifest.webmanifest`, `/__grok/icon-180.png` et `theme-color`
+`#120e0c` (valeurs d’origine du bundle). Pour ne pas renommer les chunks en
+v8, les mêmes fichiers sont aussi servis à ces chemins : le manifeste
+`__grok` est identique à celui de la racine, et `icon-180.png` a été remplacé
+par l’icône cible OCHE (l’ancien fichier était un placeholder Grok). Chrome
+résout donc le manifeste post-hydratation sans erreur. La meta `theme-color`
+reste `#120e0c` une fois l’app hydratée (écart minime avec `#140f0c`).
+
+### Couleurs
+
+Issues de `assets/styles-oche-v2.css` :
+
+- `--color-bg` / `theme_color` / `background_color` / meta `theme-color` : `#140f0c`
+- `--color-board-cream` `#f0d9a6`, `--color-board-red` `#e23b32`, `--color-board-green` `#1f8f5a`, `--color-inset` `#0c0a09`
+
+(`favicon.svg` a été aligné sur ces teintes.)
+
+### Service worker
+
+Stratégie volontairement conservatrice, à cause des caches périmés des anciens déploiements :
+
+- `install` : `skipWaiting` + cache uniquement `/hors-ligne.html`
+- `activate` : suppression des autres caches + `clients.claim`
+- navigations (`mode === "navigate"`) : **network-only**, fallback hors-ligne **uniquement** si `fetch` lève (panne réseau). Un statut HTTP 404 n’est pas un échec — GitHub Pages sert les routes `/salle/*` via `404.html`
+- autres GET same-origin : **network-only**, pas de cache (chunks JS/CSS et HTML jamais servis stale)
+- requêtes non-GET et cross-origin (Supabase) : non interceptées
+
+### Asset links (à compléter côté Android)
+
+Package prévu (convention Bubblewrap pour cette origine) : `io.github.pottoka64.oche`.
+
+`sha256_cert_fingerprints` est un tableau vide placeholder. Après génération du
+keystore d’upload et activation de la signature Play App Signing, y mettre :
+
+1. l’empreinte SHA-256 de la clé d’upload ;
+2. l’empreinte SHA-256 de la clé de signature Play (visible dans la Play Console après le premier envoi du `.aab`).
+
+### Politique de confidentialité
+
+- URL Play : https://pottoka64.github.io/confidentialite.html
+- Éditeur : Camille Herriau. Date d’effet : 14 novembre 2026.
+- Couvre : stockage local, salon partagé (nom du tournoi, surnoms, scores) hébergé par Supabase (région non confirmée publiquement — pas d’en-tête de région exploitable), pas de compte / pub / analytics / géolocalisation / vente, fermeture du salon par l’hôte, enfants, droits RGPD.
+- Courriel de contact laissé en placeholder clairement marqué : `[ADRESSE E-MAIL À CONFIRMER]`.
+- Pas de lien depuis l’app React : l’arbre hydrate tout le `document`, un ajout dans le HTML SSR casserait l’hydratation ou disparaîtrait, et modifier les chunks n’était pas souhaité. La page autonome suffit pour la fiche Play.
+
+Ne pas toucher au chemin `pottoka64.github.io/hack-idle-privacy/` (autre dépôt / autre app).
+
+### Paramètres Bubblewrap (pour l’agent Android)
+
+- Host : `pottoka64.github.io`
+- Start URL : `https://pottoka64.github.io/`
+- Manifest URL : `https://pottoka64.github.io/manifest.webmanifest`
+- Package id : `io.github.pottoka64.oche`
+- App name / short name : `OCHE`
+- Theme / background : `#140f0c`
+- Icône : `https://pottoka64.github.io/icons/icon-512.png`
+- Icône maskable : `https://pottoka64.github.io/icons/icon-512-maskable.png`
+- Keystore : en générer un **dédié à OCHE** (ne pas réutiliser celui de Hack Idle).
+- Activer Play App Signing, puis mettre à jour `/.well-known/assetlinks.json`.

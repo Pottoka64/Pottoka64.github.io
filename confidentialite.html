@@ -1,0 +1,280 @@
+<!doctype html>
+<html lang="fr" class="antialiased">
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+    <meta name="theme-color" content="#140f0c" />
+    <meta
+      name="description"
+      content="Politique de confidentialité de l’application OCHE, éditée par Camille Herriau."
+    />
+    <title>Politique de confidentialité — OCHE</title>
+    <link rel="icon" type="image/svg+xml" href="/favicon.svg" />
+    <link rel="manifest" href="/manifest.webmanifest" />
+    <link rel="apple-touch-icon" href="/icons/apple-touch-icon.png" />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin="anonymous" />
+    <link
+      rel="stylesheet"
+      href="https://fonts.googleapis.com/css2?family=Barlow+Condensed:wght@600;700&amp;family=Barlow:ital,wght@0,400;0,500;0,600;1,400&amp;display=swap"
+    />
+    <style>
+      :root {
+        --bg: #140f0c;
+        --fg: #f6efe4;
+        --muted: #b7ab9b;
+        --subtle: #7e7468;
+        --cream: #f0d9a6;
+        --red: #e23b32;
+        --green: #1f8f5a;
+        --inset: #0c0a09;
+        --raised: #2a211c;
+        --surface: #1f1814;
+        --line: #f6efe42e;
+        --font: "Barlow", ui-sans-serif, system-ui, sans-serif;
+        --display: "Barlow Condensed", "Barlow", ui-sans-serif, system-ui, sans-serif;
+      }
+      * { box-sizing: border-box; }
+      html, body { margin: 0; background: var(--bg); color: var(--fg); font-family: var(--font); }
+      body {
+        min-height: 100dvh;
+        background-image: radial-gradient(ellipse at 0% -10%, #e23b321f, transparent 42%),
+          radial-gradient(ellipse at 100% 120%, #1f8f5a1a, transparent 40%);
+      }
+      .stripe {
+        height: 6px;
+        background: repeating-linear-gradient(
+          90deg,
+          var(--red) 0 28px,
+          var(--cream) 28px 40px,
+          var(--green) 40px 68px,
+          var(--inset) 68px 80px
+        );
+      }
+      header {
+        border-bottom: 2px solid var(--line);
+        background: color-mix(in oklab, var(--bg) 90%, transparent);
+      }
+      .bar {
+        max-width: 44rem;
+        margin: 0 auto;
+        padding: 0.85rem 1.25rem;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        gap: 1rem;
+      }
+      .logo { display: inline-flex; align-items: center; gap: 0.6rem; text-decoration: none; color: var(--cream); }
+      .logo svg { width: 2rem; height: 2rem; }
+      .logo span { font-family: var(--display); font-size: 1.5rem; font-weight: 600; letter-spacing: 0.16em; }
+      .back {
+        color: var(--muted);
+        text-decoration: none;
+        font-size: 0.92rem;
+        font-weight: 600;
+        letter-spacing: 0.04em;
+        text-transform: uppercase;
+      }
+      .back:hover { color: var(--cream); }
+      main { max-width: 44rem; margin: 0 auto; padding: 2.25rem 1.25rem 4rem; }
+      .stamp {
+        display: inline-block;
+        font-family: var(--display);
+        font-weight: 700;
+        font-size: 0.8rem;
+        letter-spacing: 0.12em;
+        text-transform: uppercase;
+        color: var(--inset);
+        background: var(--cream);
+        padding: 0.15rem 0.45rem;
+        box-shadow: 3px 3px 0 0 var(--red);
+        margin-bottom: 0.85rem;
+      }
+      h1 {
+        font-family: var(--display);
+        font-size: clamp(2rem, 6vw, 3rem);
+        font-weight: 700;
+        letter-spacing: 0.03em;
+        text-transform: uppercase;
+        color: var(--cream);
+        margin: 0 0 0.4rem;
+        line-height: 1.05;
+      }
+      .meta { color: var(--subtle); font-size: 0.95rem; margin: 0 0 2rem; }
+      h2 {
+        font-family: var(--display);
+        font-size: 1.45rem;
+        font-weight: 700;
+        letter-spacing: 0.06em;
+        text-transform: uppercase;
+        color: var(--cream);
+        margin: 2rem 0 0.7rem;
+        padding-top: 1.1rem;
+        border-top: 1px solid var(--line);
+      }
+      p, li { color: var(--fg); line-height: 1.6; font-size: 1.05rem; }
+      p { margin: 0 0 0.9rem; }
+      ul { margin: 0 0 0.9rem; padding-left: 1.2rem; }
+      li { margin: 0 0 0.4rem; }
+      a { color: var(--cream); }
+      a:hover { color: var(--fg); }
+      .note {
+        background: var(--surface);
+        border: 1px solid var(--line);
+        border-radius: 12px;
+        padding: 0.9rem 1rem;
+        color: var(--muted);
+        font-size: 0.98rem;
+      }
+      .placeholder {
+        display: inline-block;
+        background: var(--raised);
+        color: var(--cream);
+        border: 1px dashed var(--cream);
+        padding: 0.05rem 0.4rem;
+        font-weight: 600;
+        letter-spacing: 0.02em;
+      }
+      footer {
+        max-width: 44rem;
+        margin: 0 auto;
+        padding: 0 1.25rem 3rem;
+        color: var(--subtle);
+        font-size: 0.9rem;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="stripe" aria-hidden="true"></div>
+    <header>
+      <div class="bar">
+        <a class="logo" href="/" aria-label="OCHE, accueil">
+          <svg viewBox="0 0 32 32" aria-hidden="true">
+            <circle cx="16" cy="16" r="15" fill="#0c0a09"/>
+            <circle cx="16" cy="16" r="12" fill="#f0d9a6"/>
+            <path fill="#0c0a09" d="M16 16 L16 4 A12 12 0 0 1 28 16 Z"/>
+            <path fill="#0c0a09" d="M16 16 L16 28 A12 12 0 0 1 4 16 Z"/>
+            <circle cx="16" cy="16" r="12" fill="none" stroke="#e23b32" stroke-width="2.2"/>
+            <circle cx="16" cy="16" r="7.2" fill="none" stroke="#1f8f5a" stroke-width="2"/>
+            <circle cx="16" cy="16" r="2.4" fill="#e23b32"/>
+            <circle cx="16" cy="16" r="1" fill="#f0d9a6"/>
+          </svg>
+          <span>OCHE</span>
+        </a>
+        <a class="back" href="/">Retour à l’app</a>
+      </div>
+    </header>
+    <main>
+      <p class="stamp">Confidentialité</p>
+      <h1>Politique de confidentialité</h1>
+      <p class="meta">Application OCHE · Éditeur : Camille Herriau · En vigueur le 14 novembre 2026</p>
+
+      <h2>1. Qui nous sommes</h2>
+      <p>
+        OCHE est une application de gestion de matchs et de tournois de fléchettes
+        (pointe acier), éditée par Camille Herriau. Elle fonctionne dans le
+        navigateur et, le cas échéant, comme application Android installée depuis
+        le Google Play Store.
+      </p>
+
+      <h2>2. Données traitées</h2>
+      <p>
+        OCHE ne demande pas de créer un compte. L’application n’affiche pas de
+        publicité, n’utilise pas d’outil d’analyse d’audience, ne collecte pas
+        la position géographique et ne vend aucune donnée.
+      </p>
+      <p>
+        <strong>Sur votre appareil.</strong> Les tournois, les joueurs, les
+        matchs et les scores que vous saisissez sont enregistrés localement dans
+        le navigateur (stockage local, ou <span lang="en">localStorage</span>).
+        Ces informations restent sur l’appareil tant que vous ne les supprimez
+        pas dans l’application ou en effaçant les données du site.
+      </p>
+      <p>
+        <strong>Lors du partage d’un salon.</strong> Si vous partagez un tournoi
+        avec un code salon, les données de ce tournoi sont transmises et
+        stockées sur un serveur hébergé par Supabase. Il s’agit du nom du
+        tournoi, des noms ou surnoms des joueurs tels qu’ils ont été saisis,
+        des scores et des résultats des matchs. Toute personne qui dispose du
+        code du salon peut y accéder. Ne communiquez ce code qu’aux personnes
+        concernées, et évitez d’y inscrire des informations personnelles
+        inutiles (un surnom suffit souvent).
+      </p>
+
+      <h2>3. Hébergement des salons partagés</h2>
+      <p>
+        Les salons partagés sont hébergés par Supabase. Nous n’avons pas
+        indiqué de région précise dans cette page faute de confirmation
+        publique au moment de sa rédaction.
+      </p>
+
+      <h2>4. Conservation et suppression</h2>
+      <ul>
+        <li>
+          Les données locales restent sous votre contrôle, sur votre appareil.
+        </li>
+        <li>
+          L’hôte d’un salon peut le fermer : le salon n’est alors plus
+          utilisable dans l’application avec le code. Les données correspondantes
+          peuvent toutefois rester stockées côté serveur jusqu’à leur
+          suppression.
+        </li>
+        <li>
+          Pour demander l’effacement d’un salon, contactez d’abord
+          l’organisateur du tournoi, ou écrivez-nous à
+          <span class="placeholder">[ADRESSE E-MAIL À CONFIRMER]</span>.
+        </li>
+      </ul>
+      <p>
+        Aucune durée de conservation automatique n’est appliquée à ce jour au-delà
+        de ce qui précède.
+      </p>
+
+      <h2>5. Destinataires</h2>
+      <p>
+        Les données d’un salon partagé sont accessibles à toute personne qui
+        connaît le code, ainsi qu’à l’hébergeur Supabase pour le fonctionnement
+        du service. Elles ne sont pas cédées à des annonceurs ni vendues.
+      </p>
+
+      <h2>6. Enfants</h2>
+      <p>
+        OCHE n’est pas destinée aux enfants de moins de 15 ans. Nous ne
+        collectons pas sciemment de données personnelles d’enfants. Les
+        organisateurs ne doivent pas y inscrire d’informations permettant
+        d’identifier un mineur sans l’accord de la personne habilitée.
+      </p>
+
+      <h2>7. Vos droits</h2>
+      <p>
+        Conformément au règlement général sur la protection des données (RGPD)
+        et à la loi Informatique et Libertés, vous pouvez demander l’accès, la
+        rectification ou l’effacement des données qui vous concernent. Dans
+        l’application, un marqueur peut corriger ou annuler un score, et l’hôte
+        peut fermer le salon. Pour toute autre demande, écrivez-nous à
+        <span class="placeholder">[ADRESSE E-MAIL À CONFIRMER]</span>.
+      </p>
+
+      <h2>8. Contact</h2>
+      <p>
+        Éditeur : Camille Herriau.<br />
+        Courriel :
+        <span class="placeholder">[ADRESSE E-MAIL À CONFIRMER]</span>
+      </p>
+      <p class="note">
+        L’adresse de contact sera complétée dès qu’elle aura été confirmée par
+        l’éditeur. En attendant, cette mention sert de placeholder clairement
+        identifié.
+      </p>
+
+      <h2>9. Modifications</h2>
+      <p>
+        Cette politique peut être mise à jour. La date d’effet figure en tête
+        de page.
+      </p>
+    </main>
+    <footer>
+      <p>OCHE · Politique de confidentialité · 14 novembre 2026</p>
+    </footer>
+  </body>
+</html>

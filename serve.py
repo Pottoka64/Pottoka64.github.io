@@ -7,12 +7,16 @@ from http.server import SimpleHTTPRequestHandler, ThreadingHTTPServer
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent
-STATIC_PREFIXES = ("/assets/", "/__grok/")
+STATIC_PREFIXES = ("/assets/", "/__grok/", "/icons/", "/.well-known/")
 STATIC_FILES = {
     "/favicon.svg",
     "/og.jpg",
     "/x-banner.jpg",
     "/index.html",
+    "/manifest.webmanifest",
+    "/sw.js",
+    "/hors-ligne.html",
+    "/confidentialite.html",
 }
 
 
